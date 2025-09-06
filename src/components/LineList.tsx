@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Line, Station } from "../content.config";
 import LineBadge from "./LineBadge";
 import StationButton from "./StationButton";
+import { motion } from "framer-motion";
 
 export function LineList({
   line,
@@ -14,10 +15,14 @@ export function LineList({
 }) {
   const [reversed, setReversed] = useState(false);
 
+  const stations = reversed
+    ? stationsByLine[line.id].toReversed()
+    : stationsByLine[line.id];
+
   return (
-    <div className="flex-1 relative isolate">
+    <div className="flex-1 relative isolate h-fit">
       <div
-        className="w-8 h-8 absolute left-0 top-4 -z-10"
+        className="w-8 absolute left-0 top-4 -bottom-4 -z-10 rounded-b-full"
         style={{ background: line.color }}
       />
       <h2
@@ -47,16 +52,25 @@ export function LineList({
         </svg>
       </h2>
       <div className="space-y-2">
-        {(reversed
-          ? stationsByLine[line.id].toReversed()
-          : stationsByLine[line.id]
-        ).map((station) => (
-          <StationButton
+        {stations.map((station) => (
+          <motion.div
+            className="group pl-8"
             key={station.id}
-            station={station}
-            lineById={lineById}
-            line={line}
-          />
+            layout
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              layout: { duration: 0.3, ease: "easeInOut" },
+              opacity: { duration: 0.2 },
+            }}
+          >
+            <StationButton
+              station={station}
+              lineById={lineById}
+              line={line}
+              isLast={station === stations[stations.length - 1]}
+            />
+          </motion.div>
         ))}
       </div>
     </div>
