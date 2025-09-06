@@ -57,11 +57,8 @@ export function LineList({
             className="group pl-8"
             key={station.id}
             layout
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
             transition={{
-              layout: { duration: 0.3, ease: "easeInOut" },
-              opacity: { duration: 0.2 },
+              layout: { duration: 0.3, ease: "circInOut" },
             }}
           >
             <StationButton
