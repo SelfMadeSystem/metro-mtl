@@ -175,5 +175,205 @@
     "lines": ["orange"],
     "accessible": true,
     "parking": true
+  },
+  {
+    "id": "angrignon",
+    "name": "Angrignon",
+    "lines": ["green"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "monk",
+    "name": "Monk",
+    "lines": ["green"]
+  },
+  {
+    "id": "jolicoeur",
+    "name": "Jolicoeur",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "verdun",
+    "name": "Verdun",
+    "lines": ["green"]
+  },
+  {
+    "id": "de-l-eglise",
+    "name": "De L'Église",
+    "lines": ["green"]
+  },
+  {
+    "id": "lasalle",
+    "name": "LaSalle",
+    "lines": ["green"]
+  },
+  {
+    "id": "charlevoix",
+    "name": "Charlevoix",
+    "lines": ["green"]
+  },
+  {
+    "id": "atwater",
+    "name": "Atwater",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "guy-concordia",
+    "name": "Guy-Concordia",
+    "lines": ["green"]
+  },
+  {
+    "id": "peel",
+    "name": "Peel",
+    "lines": ["green"]
+  },
+  {
+    "id": "mcgill",
+    "name": "McGill",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "place-des-arts",
+    "name": "Place-des-Arts",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "saint-laurent",
+    "name": "Saint-Laurent",
+    "lines": ["green"]
+  },
+  {
+    "id": "beaudry",
+    "name": "Beaudry",
+    "lines": ["green"]
+  },
+  {
+    "id": "papineau",
+    "name": "Papineau",
+    "lines": ["green"]
+  },
+  {
+    "id": "frontenac",
+    "name": "Frontenac",
+    "lines": ["green"]
+  },
+  {
+    "id": "prefontaine",
+    "name": "Préfontaine",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "joliette",
+    "name": "Joliette",
+    "lines": ["green"]
+  },
+  {
+    "id": "pie-ix",
+    "name": "Pie-IX",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "viau",
+    "name": "Viau",
+    "lines": ["green"],
+    "accessible": true
+  },
+  {
+    "id": "assomption",
+    "name": "Assomption",
+    "lines": ["green"]
+  },
+  {
+    "id": "cadillac",
+    "name": "Cadillac",
+    "lines": ["green"]
+  },
+  {
+    "id": "langelier",
+    "name": "Langelier",
+    "lines": ["green"]
+  },
+  {
+    "id": "radisson",
+    "name": "Radisson",
+    "lines": ["green"],
+    "parking": true
+  },
+  {
+    "id": "honore-beaugrand",
+    "name": "Honoré-Beaugrand",
+    "lines": ["green"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "longueuil",
+    "name": "Longueuil–Université-de-Sherbrooke",
+    "lines": ["yellow"],
+    "parking": true
+  },
+  {
+    "id": "jean-drapeau",
+    "name": "Jean-Drapeau",
+    "lines": ["yellow"]
+  },
+  {
+    "id": "cote-des-neiges",
+    "name": "Côte-des-Neiges",
+    "lines": ["blue"]
+  },
+  {
+    "id": "universite-de-montreal",
+    "name": "Université-de-Montréal",
+    "lines": ["blue"]
+  },
+  {
+    "id": "edouard-montpetit",
+    "name": "Édouard-Montpetit",
+    "lines": ["blue"]
+  },
+  {
+    "id": "outremont",
+    "name": "Outremont",
+    "lines": ["blue"],
+    "accessible": true
+  },
+  {
+    "id": "acadie",
+    "name": "Acadie",
+    "lines": ["blue"]
+  },
+  {
+    "id": "parc",
+    "name": "Parc",
+    "lines": ["blue"]
+  },
+  {
+    "id": "de-castelnau",
+    "name": "De Castelnau",
+    "lines": ["blue"]
+  },
+  {
+    "id": "fabre",
+    "name": "Fabre",
+    "lines": ["blue"]
+  },
+  {
+    "id": "d-iberville",
+    "name": "D'Iberville",
+    "lines": ["blue"],
+    "accessible": true
+  },
+  {
+    "id": "saint-michel",
+    "name": "Saint-Michel",
+    "lines": ["blue"]
   }
 ]

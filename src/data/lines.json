@@ -5,7 +5,35 @@
     "code": "1",
     "color": "#009944",
     "textColor": "#FFFFFF",
-    "stations": ["todo", "berri-uqam", "lionel-groulx"]
+    "stations": [
+      "angrignon",
+      "monk",
+      "jolicoeur",
+      "verdun",
+      "de-l-eglise",
+      "lasalle",
+      "charlevoix",
+      "lionel-groulx",
+      "atwater",
+      "guy-concordia",
+      "peel",
+      "mcgill",
+      "place-des-arts",
+      "saint-laurent",
+      "berri-uqam",
+      "beaudry",
+      "papineau",
+      "frontenac",
+      "prefontaine",
+      "joliette",
+      "pie-ix",
+      "viau",
+      "assomption",
+      "cadillac",
+      "langelier",
+      "radisson",
+      "honore-beaugrand"
+    ]
   },
   {
     "id": "orange",
@@ -53,7 +81,11 @@
     "code": "4",
     "color": "#FFD100",
     "textColor": "#000000",
-    "stations": ["todo", "berri-uqam"]
+    "stations": [
+      "longueuil",
+      "jean-drapeau",
+      "berri-uqam"
+    ]
   },
   {
     "id": "blue",
@@ -61,6 +93,19 @@
     "code": "5",
     "color": "#00A1E0",
     "textColor": "#FFFFFF",
-    "stations": ["todo", "snowdon", "jean-talon"]
+    "stations": [
+      "snowdon",
+      "cote-des-neiges",
+      "universite-de-montreal",
+      "eduard-montpetit",
+      "outremont",
+      "acadie",
+      "parc",
+      "de-castelnau",
+      "jean-talon",
+      "fabre",
+      "d-iberville",
+      "saint-michel"
+    ]
   }
 ]
