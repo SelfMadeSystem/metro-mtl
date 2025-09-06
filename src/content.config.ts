@@ -11,13 +11,19 @@ const stationSchema = z.object({
   parking: z.boolean().optional(),
 });
 
+export type Station = z.infer<typeof stationSchema>;
+
 // Define a schema for metro lines
 const lineSchema = z.object({
   id: z.string().min(1),
+  code: z.string().min(1).max(2), // Short code like "1", "2", "A", "B"
   name: z.string().min(1),
   color: z.string().min(1), // Hex color code
+  textColor: z.string().min(1), // Hex color code for text
   stations: z.array(reference("stations")).min(1), // List of station IDs
 });
+
+export type Line = z.infer<typeof lineSchema>;
 
 // Define collections
 const stationsCollection = defineCollection({

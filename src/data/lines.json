@@ -1,8 +1,18 @@
 [
   {
+    "id": "green",
+    "name": "Green Line",
+    "code": "1",
+    "color": "#009944",
+    "textColor": "#FFFFFF",
+    "stations": ["todo", "berri-uqam", "lionel-groulx"]
+  },
+  {
     "id": "orange",
     "name": "Orange Line",
+    "code": "2",
     "color": "#FF7F27",
+    "textColor": "#FFFFFF",
     "stations": [
       "cote-vertu",
       "du-college",
@@ -38,32 +48,19 @@
     ]
   },
   {
-    "id": "green",
-    "name": "Green Line",
-    "color": "#009944",
-    "stations": [
-      "todo",
-      "berri-uqam",
-      "lionel-groulx"
-    ]
-  },
-  {
     "id": "yellow",
     "name": "Yellow Line",
+    "code": "4",
     "color": "#FFD100",
-    "stations": [
-      "todo",
-      "berri-uqam"
-    ]
+    "textColor": "#000000",
+    "stations": ["todo", "berri-uqam"]
   },
   {
     "id": "blue",
     "name": "Blue Line",
+    "code": "5",
     "color": "#00A1E0",
-    "stations": [
-      "todo",
-      "snowdon",
-      "jean-talon"
-    ]
+    "textColor": "#FFFFFF",
+    "stations": ["todo", "snowdon", "jean-talon"]
   }
 ]

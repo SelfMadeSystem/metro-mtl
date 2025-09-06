@@ -59,7 +59,7 @@
   {
     "id": "lionel-groulx",
     "name": "Lionel-Groulx",
-    "lines": ["orange", "green"],
+    "lines": ["green", "orange"],
     "accessible": true
   },
   {
@@ -99,7 +99,7 @@
   {
     "id": "berri-uqam",
     "name": "Berri-UQAM",
-    "lines": ["orange", "green", "yellow"],
+    "lines": ["green", "orange", "yellow"],
     "accessible": true
   },
   {

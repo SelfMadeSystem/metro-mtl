@@ -1,11 +1,55 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import LineBadge from "../components/LineBadge.astro";
+import StationButton from "../components/StationButton.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const stations = await getCollection("stations");
+const lines = await getCollection("lines");
+const lineById = Object.fromEntries(lines.map((line) => [line.id, line.data]));
+const stationsByLine = lines.reduce(
+  (acc, line) => {
+    // Sorted by index in line.data.stations
+    acc[line.id] = stations
+      .filter((station) => station.data.lines.some(({ id }) => id === line.id))
+      .sort(
+        (a, b) =>
+          line.data.stations.findIndex((s) => s.id === a.id) -
+          line.data.stations.findIndex((s) => s.id === b.id)
+      );
+    return acc;
+  },
+  {} as Record<string, typeof stations>
+);
 ---
 
 <Layout>
-	<Welcome />
+  <h1 class="text-3xl font-bold mb-6 text-center mt-8">
+    Metro Montréal Stations
+  </h1>
+  <div class="flex justify-between flex-wrap mx-8 gap-8">
+    {
+      lines.map((line) => (
+        <div class="flex-1 relative isolate">
+          <div class="w-8 h-8 absolute left-0 top-4 -z-10"
+            style={{ background: line.data.color }}/>
+          <h2
+            class="text-2xl font-bold mb-4 flex gap-2 text-nowrap"
+            style={{ color: line.data.color }}
+          >
+            <LineBadge line={line.data} /> {line.data.name}
+          </h2>
+          <div class="space-y-2">
+            {stationsByLine[line.id].map((station) => (
+              <StationButton
+                station={station.data}
+                lineById={lineById}
+                line={line.data}
+              />
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
 </Layout>
