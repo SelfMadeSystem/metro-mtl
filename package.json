@@ -8,6 +8,7 @@
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "astro": "^5.13.5",
+    "clsx": "^2.1.1",
     "colord": "^2.9.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
