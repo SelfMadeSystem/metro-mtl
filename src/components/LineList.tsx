@@ -4,7 +4,7 @@ import LineBadge from "./LineBadge";
 import StationButton from "./StationButton";
 import { motion } from "framer-motion";
 
-export function LineList({
+export default function LineList({
   line,
   lineById,
   stationsByLine,

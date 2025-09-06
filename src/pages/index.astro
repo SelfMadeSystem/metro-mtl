@@ -1,10 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import LineBadge from "../components/LineBadge.astro";
-import StationButton from "../components/StationButton.astro";
+import StationSearch from "../components/StationSearch";
 import type { Station } from "../content.config";
-import { LineList } from "../components/LineList.tsx";
 
 const stations = (await getCollection("stations")).map((s) => s.data);
 const lines = (await getCollection("lines")).map((s) => s.data);
@@ -29,16 +27,11 @@ const stationsByLine = lines.reduce(
   <h1 class="text-3xl font-bold mb-6 text-center mt-8">
     Metro Montréal Stations
   </h1>
-  <div class="flex justify-between flex-wrap mx-8 gap-8">
-    {
-      lines.map((line) => (
-        <LineList
-          line={line}
-          lineById={lineById}
-          stationsByLine={stationsByLine}
-          client:load
-        />
-      ))
-    }
-  </div>
+  <StationSearch
+    client:load
+    {stations}
+    {lines}
+    {lineById}
+    {stationsByLine}
+  />
 </Layout>
