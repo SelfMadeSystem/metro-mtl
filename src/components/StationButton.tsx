@@ -29,8 +29,8 @@ export default function StationButton({
     <a
       href={`/station/${station.id}/`}
       className={clsx(
-        "p-4 border border-gray-300 hover:shadow-lg transition-shadow flex",
-        line ? "rounded-r-2xl border-l-0 relative" : "rounded-2xl"
+        "p-4 border border-gray-300 transition-all flex",
+        line ? "rounded-r-2xl border-l-0 relative mr-8 hover:mr-0 hover:pr-12" : "rounded-2xl hover:shadow-lg"
       )}
     >
       {line && (
