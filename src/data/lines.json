@@ -1,0 +1,69 @@
+[
+  {
+    "id": "orange",
+    "name": "Orange Line",
+    "color": "#FF7F27",
+    "stations": [
+      "cote-vertu",
+      "du-college",
+      "de-la-savane",
+      "namur",
+      "plamondon",
+      "cote-sainte-catherine",
+      "snowdon",
+      "villa-maria",
+      "vendome",
+      "place-saint-henri",
+      "lionel-groulx",
+      "georges-vanier",
+      "lucien-l-allier",
+      "bonaventure",
+      "square-victoria",
+      "champ-de-mars",
+      "place-darmes",
+      "berri-uqam",
+      "sherbrooke",
+      "mont-royal",
+      "laurier",
+      "rosemont",
+      "beaubien",
+      "jean-talon",
+      "jarry",
+      "cremazie",
+      "sauve",
+      "henri-bourassa",
+      "cartier",
+      "de-la-concorde",
+      "montmorency"
+    ]
+  },
+  {
+    "id": "green",
+    "name": "Green Line",
+    "color": "#009944",
+    "stations": [
+      "todo",
+      "berri-uqam",
+      "lionel-groulx"
+    ]
+  },
+  {
+    "id": "yellow",
+    "name": "Yellow Line",
+    "color": "#FFD100",
+    "stations": [
+      "todo",
+      "berri-uqam"
+    ]
+  },
+  {
+    "id": "blue",
+    "name": "Blue Line",
+    "color": "#00A1E0",
+    "stations": [
+      "todo",
+      "snowdon",
+      "jean-talon"
+    ]
+  }
+]

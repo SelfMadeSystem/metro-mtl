@@ -1,0 +1,179 @@
+[
+  {
+    "id": "cote-vertu",
+    "name": "Côte-Vertu",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "du-college",
+    "name": "Du Collège",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "de-la-savane",
+    "name": "De La Savane",
+    "lines": ["orange"]
+  },
+  {
+    "id": "namur",
+    "name": "Namur",
+    "lines": ["orange"],
+    "parking": true
+  },
+  {
+    "id": "plamondon",
+    "name": "Plamondon",
+    "lines": ["orange"]
+  },
+  {
+    "id": "cote-sainte-catherine",
+    "name": "Côte-Sainte-Catherine",
+    "lines": ["orange"]
+  },
+  {
+    "id": "snowdon",
+    "name": "Snowdon",
+    "lines": ["orange", "blue"],
+    "accessible": true
+  },
+  {
+    "id": "villa-maria",
+    "name": "Villa-Maria",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "vendome",
+    "name": "Vendôme",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "place-saint-henri",
+    "name": "Place-Saint-Henri",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "lionel-groulx",
+    "name": "Lionel-Groulx",
+    "lines": ["orange", "green"],
+    "accessible": true
+  },
+  {
+    "id": "georges-vanier",
+    "name": "Georges-Vanier",
+    "lines": ["orange"]
+  },
+  {
+    "id": "lucien-l-allier",
+    "name": "Lucien-L'Allier",
+    "lines": ["orange"]
+  },
+  {
+    "id": "bonaventure",
+    "name": "Bonaventure",
+    "lines": ["orange"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "square-victoria",
+    "name": "Square-Victoria-OACI",
+    "lines": ["orange"]
+  },
+  {
+    "id": "place-darmes",
+    "name": "Place-d'Armes",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "champ-de-mars",
+    "name": "Champ-de-Mars",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "berri-uqam",
+    "name": "Berri-UQAM",
+    "lines": ["orange", "green", "yellow"],
+    "accessible": true
+  },
+  {
+    "id": "sherbrooke",
+    "name": "Sherbrooke",
+    "lines": ["orange"]
+  },
+  {
+    "id": "mont-royal",
+    "name": "Mont-Royal",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "laurier",
+    "name": "Laurier",
+    "lines": ["orange"]
+  },
+  {
+    "id": "rosemont",
+    "name": "Rosemont",
+    "lines": ["orange"],
+    "accessible": true
+  },
+  {
+    "id": "beaubien",
+    "name": "Beaubien",
+    "lines": ["orange"]
+  },
+  {
+    "id": "jean-talon",
+    "name": "Jean-Talon",
+    "lines": ["orange", "blue"],
+    "accessible": true
+  },
+  {
+    "id": "jarry",
+    "name": "Jarry",
+    "lines": ["orange"]
+  },
+  {
+    "id": "cremazie",
+    "name": "Crémazie",
+    "lines": ["orange"]
+  },
+  {
+    "id": "sauve",
+    "name": "Sauvé",
+    "lines": ["orange"]
+  },
+  {
+    "id": "henri-bourassa",
+    "name": "Henri-Bourassa",
+    "lines": ["orange"]
+  },
+  {
+    "id": "cartier",
+    "name": "Cartier",
+    "lines": ["orange"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "de-la-concorde",
+    "name": "De La Concorde",
+    "lines": ["orange"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "montmorency",
+    "name": "Montmorency",
+    "lines": ["orange"],
+    "accessible": true,
+    "parking": true
+  }
+]

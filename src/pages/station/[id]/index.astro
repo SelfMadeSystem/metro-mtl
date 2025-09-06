@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../../layouts/Layout.astro";
+import { getEntries } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("stations");
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+const lines = await getEntries(post.data.lines);
+
+---
+
+<Layout>
+  <h1>{post.data.name}</h1>
+  <p>Lines:</p>
+  <ul>
+    {
+      lines.map((line) => (
+        <li
+          class="line"
+          style={{
+            "--line-color": line.data.color,
+            "--line-contrast": line.data.id === "yellow" ? "black" : "white",
+          }}
+        >
+          {line.data.name}
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
+
+<style>
+  .line {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    margin: 0.2em;
+    border-radius: 0.3em;
+    background-color: var(--line-color);
+    color: var(--line-contrast);
+    font-weight: bold;
+  }
+</style>
