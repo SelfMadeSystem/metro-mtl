@@ -81,11 +81,7 @@
     "code": "4",
     "color": "#FFD100",
     "textColor": "#000000",
-    "stations": [
-      "longueuil",
-      "jean-drapeau",
-      "berri-uqam"
-    ]
+    "stations": ["longueuil", "jean-drapeau", "berri-uqam"]
   },
   {
     "id": "blue",
@@ -97,7 +93,7 @@
       "snowdon",
       "cote-des-neiges",
       "universite-de-montreal",
-      "eduard-montpetit",
+      "edouard-montpetit",
       "outremont",
       "acadie",
       "parc",
