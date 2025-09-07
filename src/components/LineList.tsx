@@ -8,10 +8,14 @@ export default function LineList({
   line,
   lineById,
   stationsByLine,
+  isFavorite,
+  onToggleFavorite,
 }: {
   line: Line;
   lineById: Record<string, Line>;
   stationsByLine: Record<string, Station[]>;
+  isFavorite: (stationId: string) => boolean;
+  onToggleFavorite: (stationId: string) => void;
 }) {
   const [reversed, setReversed] = useState(false);
 
@@ -66,6 +70,8 @@ export default function LineList({
               lineById={lineById}
               line={line}
               isLast={station === stations[stations.length - 1]}
+              isFavorite={isFavorite(station.id)}
+              onToggleFavorite={onToggleFavorite}
             />
           </motion.div>
         ))}
