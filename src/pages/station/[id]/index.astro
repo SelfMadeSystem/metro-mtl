@@ -2,48 +2,294 @@
 import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
 import { getEntries } from "astro:content";
+import type { Station } from "../../../content.config";
+import { Image } from "astro:assets";
+
+interface Props {
+  station: Station;
+}
 
 export async function getStaticPaths() {
-  const posts = await getCollection("stations");
-  return posts.map((post) => ({
-    params: { id: post.id },
-    props: { post },
+  const stations = await getCollection("stations");
+  return stations.map((station) => ({
+    params: { id: station.id },
+    props: { station: station.data },
   }));
 }
 
-const { post } = Astro.props;
+const { station } = Astro.props;
 
-const lines = await getEntries(post.data.lines);
+const lines = await getEntries(station.lines);
+
+const autour = (await import(`../../../assets/svgs/${station.id}_autour.svg`))
+  .default as ImageMetadata;
+const network = (await import(`../../../assets/svgs/${station.id}_network.svg`))
+  .default as ImageMetadata;
+const quartier = (
+  await import(`../../../assets/svgs/${station.id}_quartier.svg`)
+).default as ImageMetadata;
 ---
 
-<Layout>
-  <h1>{post.data.name}</h1>
-  <p>Lines:</p>
-  <ul>
-    {
-      lines.map((line) => (
-        <li
-          class="line"
-          style={{
-            "--line-color": line.data.color,
-            "--line-contrast": line.data.id === "yellow" ? "black" : "white",
-          }}
-        >
-          {line.data.name}
-        </li>
-      ))
-    }
-  </ul>
-</Layout>
+<Layout
+  title={`${station.name} - Metro MTL`}
+  description={`Information about ${station.name} metro station in Montreal, including maps and line connections.`}
+>
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <!-- Header Section -->
+    <header class="bg-white shadow-lg border-b">
+      <!-- Navigation -->
+      <nav class="border-b shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <a
+            href="/"
+            class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Stations
+          </a>
+        </div>
+      </nav>
 
-<style>
-  .line {
-    display: inline-block;
-    padding: 0.2em 0.5em;
-    margin: 0.2em;
-    border-radius: 0.3em;
-    background-color: var(--line-color);
-    color: var(--line-contrast);
-    font-weight: bold;
-  }
-</style>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-3 h-8 rounded-full"
+              style={lines.length === 1
+                ? {
+                    background: lines[0].data.color,
+                  }
+                : lines.length === 2
+                  ? {
+                      background: `linear-gradient(135deg, ${lines[0].data.color} 50%, ${lines[1].data.color} 50%)`,
+                    }
+                  : lines.length === 3
+                    ? {
+                        background: `linear-gradient(135deg, ${lines[0].data.color} 33%, ${lines[1].data.color} 33%, ${lines[1].data.color} 66%, ${lines[2].data.color} 66%)`,
+                      }
+                    : {}}
+            >
+            </div>
+            <div>
+              <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                {station.name}
+              </h1>
+              <p class="text-gray-600 mt-1">
+                Station de métro • Montreal Metro
+              </p>
+            </div>
+          </div>
+
+          <!-- Lines Section -->
+          <div class="flex flex-col items-end">
+            <span class="text-sm font-medium text-gray-500 mb-2">Lines</span>
+            <div class="flex flex-wrap gap-2 justify-end">
+              {
+                lines.map((line) => (
+                  <span
+                    class="inline-flex items-center pl-2 pr-3 py-1.5 rounded-full text-sm font-bold shadow-sm"
+                    style={{
+                      backgroundColor: line.data.color,
+                      color: line.data.textColor,
+                    }}
+                  >
+                    <span class="w-6 h-6 rounded-full bg-white text-black bg-opacity-20 flex items-center justify-center mr-2 text-xs font-black">
+                      {line.data.code}
+                    </span>
+                    {line.data.name}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Section -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Station Features -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {
+          station.accessibility && (
+            <div class="bg-white rounded-lg p-4 shadow-sm border border-green-200">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg
+                    class="w-6 h-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-gray-900">Accessible</h3>
+                  <p class="text-sm text-gray-600">Wheelchair accessible</p>
+                </div>
+              </div>
+            </div>
+          )
+        }
+
+        {
+          station.parking && (
+            <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-200">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <svg
+                    class="w-6 h-6 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-gray-900">Parking</h3>
+                  <p class="text-sm text-gray-600">Parking available</p>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Maps Section -->
+      <div class="space-y-8">
+        <!-- Around Station -->
+        <section class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+              <svg
+                class="w-6 h-6 text-blue-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              Around the Station
+            </h2>
+            <p class="text-gray-600 mt-1">
+              Points of interest and amenities near {station.name}
+            </p>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-center">
+              <Image
+                src={autour}
+                alt={`Map around ${station.name} station`}
+                class="max-w-full h-auto rounded-lg shadow-sm"
+                width={600}
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Network Map -->
+        <section class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+              <svg
+                class="w-6 h-6 text-green-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                ></path>
+              </svg>
+              Network Connection
+            </h2>
+            <p class="text-gray-600 mt-1">
+              Metro network view from {station.name}
+            </p>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-center">
+              <Image
+                src={network}
+                alt={`Network map at ${station.name} station`}
+                class="max-w-full h-auto rounded-lg shadow-sm"
+                width={600}
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- Neighborhood Map -->
+        <section class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="px-6 py-4 bg-gray-50 border-b">
+            <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+              <svg
+                class="w-6 h-6 text-purple-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                ></path>
+              </svg>
+              Neighborhood
+            </h2>
+            <p class="text-gray-600 mt-1">
+              Local area and district around {station.name}
+            </p>
+          </div>
+          <div class="p-6">
+            <div class="flex justify-center">
+              <Image
+                src={quartier}
+                alt={`Neighborhood map at ${station.name} station`}
+                class="max-w-full h-auto rounded-lg shadow-sm"
+                width={600}
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</Layout>
