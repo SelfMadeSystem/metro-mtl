@@ -82,6 +82,7 @@
   {
     "id": "square-victoria",
     "name": "Square-Victoria-OACI",
+    "stmId": "square-victoria-oaci",
     "lines": ["orange"]
   },
   {
@@ -158,6 +159,7 @@
   {
     "id": "cartier",
     "name": "Cartier",
+    "stmId": "cartier-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
     "parking": true
@@ -165,6 +167,7 @@
   {
     "id": "de-la-concorde",
     "name": "De La Concorde",
+    "stmId": "de-la-concorde-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
     "parking": true
@@ -172,6 +175,7 @@
   {
     "id": "montmorency",
     "name": "Montmorency",
+    "stmId": "montmorency-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
     "parking": true
@@ -316,12 +320,14 @@
   {
     "id": "longueuil",
     "name": "Longueuil–Université-de-Sherbrooke",
+    "stmId": "longueuil-universite-de-sherbrooke-(zone-b)",
     "lines": ["yellow"],
     "parking": true
   },
   {
     "id": "jean-drapeau",
     "name": "Jean-Drapeau",
+    "stmId": "jean-drapeau-(zone-a)",
     "lines": ["yellow"]
   },
   {

@@ -29,7 +29,7 @@ const quartier = (
   await import(`../../../assets/svgs/${station.id}_quartier.svg`)
 ).default as ImageMetadata;
 
-const stmUrl = `https://www.stm.info/en/info/networks/metro/${station.stmId ?? station.id}`;
+const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent(station.stmId ?? station.id)}`;
 ---
 
 <Layout
