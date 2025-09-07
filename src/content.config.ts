@@ -7,6 +7,7 @@ const stationSchema = z.object({
   name: z.string().min(1),
   lines: reference("lines").array().min(1), // List of line IDs
   exits: z.array(z.string()).optional(), // TODO: Not yet implemented
+  stmId: z.string().optional(), // STM station ID (if different from 'id')
   accessibility: z.boolean().optional(),
   parking: z.boolean().optional(),
 });
