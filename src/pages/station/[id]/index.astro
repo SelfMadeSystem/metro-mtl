@@ -21,13 +21,10 @@ const { station } = Astro.props;
 
 const lines = await getEntries(station.lines);
 
-const autour = (await import(`../../../assets/svgs/${station.id}_autour.svg`))
-  .default as ImageMetadata;
-const network = (await import(`../../../assets/svgs/${station.id}_network.svg`))
-  .default as ImageMetadata;
-const quartier = (
-  await import(`../../../assets/svgs/${station.id}_quartier.svg`)
-).default as ImageMetadata;
+// can't import directly, otherwise it breaks the build (out of memory)
+const autour = `/svgs/${station.id}_autour.svg`;
+const network = `/svgs/${station.id}_network.svg`;
+const quartier = `/svgs/${station.id}_quartier.svg`;
 
 const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent(station.stmId ?? station.id)}`;
 ---
@@ -234,7 +231,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
           </div>
           <div class="p-6">
             <div class="flex justify-center">
-              <Image
+              <img
                 src={autour}
                 alt={`Map around ${station.name} station`}
                 class="max-w-full h-auto rounded-lg shadow-sm"
@@ -269,7 +266,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
           </div>
           <div class="p-6">
             <div class="flex justify-center">
-              <Image
+              <img
                 src={network}
                 alt={`Network map at ${station.name} station`}
                 class="max-w-full h-auto rounded-lg shadow-sm"
@@ -304,7 +301,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
           </div>
           <div class="p-6">
             <div class="flex justify-center">
-              <Image
+              <img
                 src={quartier}
                 alt={`Neighborhood map at ${station.name} station`}
                 class="max-w-full h-auto rounded-lg shadow-sm"
