@@ -143,7 +143,8 @@
         "to": "yellow",
         "fromDirection": "",
         "toDirection": "",
-        "optimalBoarding": "montmorency"
+        "optimalBoarding": "none",
+        "description": "Must go through green platform to transfer."
       },
       {
         "from": "yellow",

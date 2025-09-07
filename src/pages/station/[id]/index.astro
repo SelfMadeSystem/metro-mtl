@@ -7,6 +7,7 @@ import type { ReferenceDataEntry } from "astro:content";
 import LinePill from "../../../components/LinePill";
 import type { InferEntrySchema } from "astro:content";
 import StationMap from "../../../components/StationMap";
+import TransferSelector from "../../../components/TransferSelector";
 
 interface Props {
   station: Station;
@@ -46,7 +47,10 @@ const transfers = await Promise.all(
       ...transfer,
       from: (await getEntry(transfer.from)).data,
       to: (await getEntry(transfer.to)).data,
-      fromDirection: await nameOrId<"stations">(transfer.fromDirection),
+      fromDirection: await nameOrId<"stations">(
+        transfer.fromDirection,
+        (name) => `direction ${name.name}`
+      ),
       toDirection: await nameOrId(
         transfer.toDirection,
         (name) => `direction ${name.name}`
@@ -180,26 +184,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
       <!-- Transfers -->
       {
         transfers.length > 0 && (
-          <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Transfers</h2>
-            <ul class="space-y-2">
-              {transfers.map((transfer) => (
-                <li class="text-gray-700">
-                  <span class="font-medium">
-                    <LinePill line={transfer.from} /> {transfer.fromDirection}
-                    to <LinePill line={transfer.to} /> {transfer.toDirection}
-                  </span>
-                  {transfer.optimalBoarding && (
-                    <span class="text-sm text-gray-500">
-                      &nbsp;•{" "}
-                      {transfer.description ??
-                        `Optimal boarding: ${transfer.optimalBoarding}`}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <TransferSelector transfers={transfers} client:load />
         )
       }
 
@@ -323,7 +308,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
 
         <!-- Network Map -->
         <StationMap
-          map={autour}
+          map={network}
           alt={`Network map at ${station.name} station`}
           title="To satisfy the TypeScript compiler"
           description="The actual slots are being passed, not these props"
@@ -352,7 +337,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
 
         <!-- Neighborhood Map -->
         <StationMap
-          map={autour}
+          map={quartier}
           alt={`Neighborhood map at ${station.name} station`}
           title="To satisfy the TypeScript compiler"
           description="The actual slots are being passed, not these props"

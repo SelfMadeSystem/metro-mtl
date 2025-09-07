@@ -3,7 +3,7 @@ import type { Line } from "../content.config";
 export default function LinePill({ line }: { line: Line }) {
   return (
     <span
-      className="inline-flex items-center pl-2 pr-3 py-1.5 rounded-full text-sm font-bold shadow-sm"
+      className="inline-flex items-center pl-2 pr-3 py-1.5 rounded-full text-sm font-bold shadow-sm text-nowrap"
       style={{
         backgroundColor: line.color,
         color: line.textColor,
