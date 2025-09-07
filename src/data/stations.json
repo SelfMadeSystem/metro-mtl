@@ -3,7 +3,14 @@
     "id": "cote-vertu",
     "name": "Côte-Vertu",
     "lines": ["orange"],
-    "accessible": true
+    "accessible": true,
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "cote-vertu"
+      }
+    ]
   },
   {
     "id": "du-college",
