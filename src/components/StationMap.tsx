@@ -14,12 +14,16 @@ export default function StationMap({
   alt: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   return (
     <section className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div
         className="px-6 py-4 bg-gray-50 cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setHasLoaded(true);
+        }}
       >
         <h2 className="text-xl font-semibold text-gray-900 flex items-center">
           {title}
@@ -35,12 +39,14 @@ export default function StationMap({
         className={clsx("overflow-hidden", !isOpen && "pointer-events-none")}
       >
         <div className="flex justify-center p-6 border-t">
-          <img
-            src={map}
-            alt={alt}
-            className="max-w-full h-auto rounded-lg shadow-sm"
-            width={600}
-          />
+          {hasLoaded && (
+            <img
+              src={map}
+              alt={alt}
+              className="max-w-full h-auto rounded-lg shadow-sm"
+              width={600}
+            />
+          )}
         </div>
       </motion.div>
     </section>
