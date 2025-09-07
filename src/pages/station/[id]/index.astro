@@ -1,9 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
-import { getEntries } from "astro:content";
+import { getEntries, getEntry } from "astro:content";
 import type { Station } from "../../../content.config";
-import { Image } from "astro:assets";
+import type { ReferenceDataEntry } from "astro:content";
+import LinePill from "../../../components/LinePill";
+import type { CollectionEntry } from "astro:content";
+import type { InferEntrySchema } from "astro:content";
 
 interface Props {
   station: Station;
@@ -18,6 +21,55 @@ export async function getStaticPaths() {
 }
 
 const { station } = Astro.props;
+
+async function nameOrId<T extends "stations" | "lines">(
+  ref: ReferenceDataEntry<T>,
+  cb?: (data: InferEntrySchema<T>) => string
+): Promise<string>;
+async function nameOrId<T extends "stations" | "lines">(
+  ref: ReferenceDataEntry<T> | undefined,
+  cb?: (data: InferEntrySchema<T>) => string
+): Promise<string | null>;
+async function nameOrId<T extends "stations" | "lines">(
+  ref: ReferenceDataEntry<T> | undefined,
+  cb?: (data: InferEntrySchema<T>) => string
+) {
+  if (!ref) return null;
+  const entry = await getEntry(ref).catch(() => null);
+  if (!entry) return ref.id;
+  return cb ? cb(entry.data as InferEntrySchema<T>) : entry.data.name;
+}
+
+const transfers = await Promise.all(
+  (station.transfers ?? []).map(async (transfer) => {
+    return {
+      ...transfer,
+      from: (await getEntry(transfer.from)).data,
+      to: (await getEntry(transfer.to)).data,
+      fromDirection: await nameOrId<"stations">(transfer.fromDirection),
+      toDirection: await nameOrId(
+        transfer.toDirection,
+        (name) => `direction ${name.name}`
+      ),
+      optimalBoarding: await nameOrId(
+        transfer.optimalBoarding,
+        (name) => `towards ${name.name}`
+      ),
+    };
+  })
+);
+
+const exits = await Promise.all(
+  (station.exits ?? []).map(async (exit) => {
+    return {
+      ...exit,
+      optimalBoarding: await nameOrId(
+        exit.optimalBoarding,
+        ({ name }) => `towards ${name}`
+      ),
+    };
+  })
+);
 
 const lines = await getEntries(station.lines);
 
@@ -96,18 +148,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
             <div class="flex flex-wrap gap-2 justify-end">
               {
                 lines.map((line) => (
-                  <span
-                    class="inline-flex items-center pl-2 pr-3 py-1.5 rounded-full text-sm font-bold shadow-sm"
-                    style={{
-                      backgroundColor: line.data.color,
-                      color: line.data.textColor,
-                    }}
-                  >
-                    <span class="w-6 h-6 rounded-full bg-white text-black bg-opacity-20 flex items-center justify-center mr-2 text-xs font-black">
-                      {line.data.code}
-                    </span>
-                    {line.data.name}
-                  </span>
+                  <LinePill line={line.data} />
                 ))
               }
             </div>
@@ -140,10 +181,59 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
 
     <!-- Content Section -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Transfers -->
+      {
+        transfers.length > 0 && (
+          <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Transfers</h2>
+            <ul class="list-disc list-inside space-y-2">
+              {transfers.map((transfer) => (
+                <li class="text-gray-700">
+                  <span class="font-medium">
+                    <LinePill line={transfer.from} /> {transfer.fromDirection}
+                    to <LinePill line={transfer.to} /> {transfer.toDirection}
+                  </span>
+                  {transfer.optimalBoarding && (
+                    <span class="text-sm text-gray-500">
+                      &nbsp;•{" "}
+                      {transfer.description ??
+                        `Optimal boarding: ${transfer.optimalBoarding}`}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      <!-- Exits -->
+      {
+        exits.length > 0 && (
+          <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Exits</h2>
+            <ul class="list-disc list-inside space-y-2">
+              {exits.map((exit) => (
+                <li class="text-gray-700">
+                  <span class="font-medium">{exit.name}</span>
+                  {exit.optimalBoarding && (
+                    <span class="text-sm text-gray-500">
+                      &nbsp;•{" "}
+                      {exit.description ??
+                        `Optimal boarding: ${exit.optimalBoarding}`}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
       <!-- Station Features -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {
-          station.accessibility && (
+          station.accessible && (
             <div class="bg-white rounded-lg p-4 shadow-sm border border-green-200">
               <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">

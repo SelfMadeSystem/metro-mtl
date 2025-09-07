@@ -101,7 +101,73 @@
     "id": "berri-uqam",
     "name": "Berri-UQAM",
     "lines": ["green", "orange", "yellow"],
-    "accessible": true
+    "accessible": true,
+    "transfers": [
+      {
+        "from": "green",
+        "to": "orange",
+        "fromDirection": "",
+        "toDirection": "montmorency",
+        "optimalBoarding": "angrignon"
+      },
+      {
+        "from": "green",
+        "to": "orange",
+        "fromDirection": "",
+        "toDirection": "cote-vertu",
+        "optimalBoarding": "honore-beaugrand"
+      },
+      {
+        "from": "green",
+        "to": "yellow",
+        "fromDirection": "",
+        "toDirection": "",
+        "optimalBoarding": "angrignon"
+      },
+      {
+        "from": "orange",
+        "to": "green",
+        "fromDirection": "",
+        "toDirection": "honore-beaugrand",
+        "optimalBoarding": "montmorency"
+      },
+      {
+        "from": "orange",
+        "to": "green",
+        "fromDirection": "",
+        "toDirection": "angrignon",
+        "optimalBoarding": "cote-vertu"
+      },
+      {
+        "from": "orange",
+        "to": "yellow",
+        "fromDirection": "",
+        "toDirection": "",
+        "optimalBoarding": "montmorency"
+      },
+      {
+        "from": "yellow",
+        "to": "green",
+        "fromDirection": "",
+        "toDirection": "honore-beaugrand",
+        "optimalBoarding": "berri-uqam"
+      },
+      {
+        "from": "yellow",
+        "to": "green",
+        "fromDirection": "",
+        "toDirection": "angrignon",
+        "optimalBoarding": "longueuil"
+      },
+      {
+        "from": "yellow",
+        "to": "orange",
+        "fromDirection": "",
+        "toDirection": "",
+        "optimalBoarding": "none",
+        "description": "Must go through green platform to transfer."
+      }
+    ]
   },
   {
     "id": "sherbrooke",
@@ -117,7 +183,21 @@
   {
     "id": "laurier",
     "name": "Laurier",
-    "lines": ["orange"]
+    "lines": ["orange"],
+    "exits": [
+      {
+        "id": "A",
+        "name": "Saint-Joseph - Gilford",
+        "address": "495, rue Gilford",
+        "optimalBoarding": "cote-vertu"
+      },
+      {
+        "id": "B",
+        "name": "Av. Laurier",
+        "address": "475 ave. Laurier est",
+        "optimalBoarding": "center of train"
+      }
+    ]
   },
   {
     "id": "rosemont",
@@ -162,7 +242,14 @@
     "stmId": "cartier-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
-    "parking": true
+    "parking": true,
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "montmorency"
+      }
+    ]
   },
   {
     "id": "de-la-concorde",

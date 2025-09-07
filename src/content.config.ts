@@ -1,14 +1,38 @@
-import { defineCollection, z, reference } from 'astro:content';
-import { file } from 'astro/loaders';
+import { defineCollection, z, reference } from "astro:content";
+import { file } from "astro/loaders";
+
+// Define exit schema
+const exitSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1), // e.g., "Saint-Joseph - Gilford", "Main Exit"
+  address: z.string().min(1).optional(), // e.g., "495, rue Gilford"
+  optimalBoarding: reference("stations").optional(), // Optimal boarding direction (e.g., "towards Snowdon", "middle of train")
+  description: z.string().optional(), // Additional details
+});
+
+export type Exit = z.infer<typeof exitSchema>;
+
+// Define transfer schema
+const transferSchema = z.object({
+  from: reference("lines"),
+  to: reference("lines"),
+  fromDirection: reference("stations").optional(), // Station ID for direction on 'from' line
+  toDirection: reference("stations").optional(), // Station ID for direction on 'to' line
+  optimalBoarding: reference("stations").optional(), // Optimal boarding direction
+  description: z.string().optional(), // Additional details
+});
+
+export type Transfer = z.infer<typeof transferSchema>;
 
 // Define a schema for station metadata
 const stationSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   lines: reference("lines").array().min(1), // List of line IDs
-  exits: z.array(z.string()).optional(), // TODO: Not yet implemented
+  exits: z.array(exitSchema).optional(),
+  transfers: z.array(transferSchema).optional(),
   stmId: z.string().optional(), // STM station ID (if different from 'id')
-  accessibility: z.boolean().optional(),
+  accessible: z.boolean().optional(),
   parking: z.boolean().optional(),
 });
 
@@ -28,12 +52,12 @@ export type Line = z.infer<typeof lineSchema>;
 
 // Define collections
 const stationsCollection = defineCollection({
-  loader: file('src/data/stations.json'),
+  loader: file("src/data/stations.json"),
   schema: stationSchema,
 });
 
 const linesCollection = defineCollection({
-  loader: file('src/data/lines.json'),
+  loader: file("src/data/lines.json"),
   schema: lineSchema,
 });
 
