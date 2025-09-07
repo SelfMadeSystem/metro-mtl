@@ -4,6 +4,7 @@ import { file } from "astro/loaders";
 // Define exit schema
 const exitSchema = z.object({
   id: z.string().min(1),
+  line: reference("lines").optional(), // Line ID (for transfer stations)
   name: z.string().min(1), // e.g., "Saint-Joseph - Gilford", "Main Exit"
   address: z.string().min(1).optional(), // e.g., "495, rue Gilford"
   optimalBoarding: reference("stations").optional(), // Optimal boarding direction (e.g., "towards Snowdon", "middle of train")
