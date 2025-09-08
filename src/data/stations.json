@@ -43,7 +43,33 @@
     "id": "snowdon",
     "name": "Snowdon",
     "lines": ["orange", "blue"],
-    "accessible": true
+    "accessible": true,
+    "transfers": [
+      {
+        "from": "orange",
+        "to": "blue",
+        "fromDirection": "cote-vertu",
+        "description": "Descend to lower platform"
+      },
+      {
+        "from": "orange",
+        "to": "blue",
+        "fromDirection": "montmorency",
+        "description": "Cross the platform"
+      },
+      {
+        "from": "blue",
+        "to": "orange",
+        "toDirection": "cote-vertu",
+        "description": "Cross the platform"
+      },
+      {
+        "from": "blue",
+        "to": "orange",
+        "toDirection": "montmorency",
+        "description": "Descend to lower platform"
+      }
+    ]
   },
   {
     "id": "villa-maria",
@@ -67,7 +93,33 @@
     "id": "lionel-groulx",
     "name": "Lionel-Groulx",
     "lines": ["green", "orange"],
-    "accessible": true
+    "accessible": true,
+    "transfers": [
+      {
+        "from": "green",
+        "to": "orange",
+        "toDirection": "montmorency",
+        "description": "Ascend to upper platform"
+      },
+      {
+        "from": "green",
+        "to": "orange",
+        "toDirection": "cote-vertu",
+        "description": "Descend to lower platform"
+      },
+      {
+        "from": "orange",
+        "to": "green",
+        "toDirection": "honore-beaugrand",
+        "description": "Ascend to upper platform"
+      },
+      {
+        "from": "orange",
+        "to": "green",
+        "toDirection": "angrignon",
+        "description": "Descend to lower platform"
+      }
+    ]
   },
   {
     "id": "georges-vanier",
@@ -113,66 +165,54 @@
       {
         "from": "green",
         "to": "orange",
-        "fromDirection": "",
         "toDirection": "montmorency",
         "optimalBoarding": "angrignon"
       },
       {
         "from": "green",
         "to": "orange",
-        "fromDirection": "",
         "toDirection": "cote-vertu",
         "optimalBoarding": "honore-beaugrand"
       },
       {
         "from": "green",
         "to": "yellow",
-        "fromDirection": "",
-        "toDirection": "",
         "optimalBoarding": "angrignon"
       },
       {
         "from": "orange",
         "to": "green",
-        "fromDirection": "",
         "toDirection": "honore-beaugrand",
         "optimalBoarding": "montmorency"
       },
       {
         "from": "orange",
         "to": "green",
-        "fromDirection": "",
         "toDirection": "angrignon",
         "optimalBoarding": "cote-vertu"
       },
       {
         "from": "orange",
         "to": "yellow",
-        "fromDirection": "",
-        "toDirection": "",
-        "optimalBoarding": "none",
+        "optimalBoarding": "center of train",
         "description": "Must go through green platform to transfer."
       },
       {
         "from": "yellow",
         "to": "green",
-        "fromDirection": "",
         "toDirection": "honore-beaugrand",
         "optimalBoarding": "berri-uqam"
       },
       {
         "from": "yellow",
         "to": "green",
-        "fromDirection": "",
         "toDirection": "angrignon",
         "optimalBoarding": "longueuil"
       },
       {
         "from": "yellow",
         "to": "orange",
-        "fromDirection": "",
-        "toDirection": "",
-        "optimalBoarding": "none",
+        "optimalBoarding": "center of train",
         "description": "Must go through green platform to transfer."
       }
     ]
@@ -203,7 +243,7 @@
         "id": "B",
         "name": "Av. Laurier",
         "address": "475 ave. Laurier est",
-        "optimalBoarding": "center of train"
+        "optimalBoarding": "montmorency"
       }
     ]
   },
@@ -222,7 +262,26 @@
     "id": "jean-talon",
     "name": "Jean-Talon",
     "lines": ["orange", "blue"],
-    "accessible": true
+    "accessible": true,
+    "transfers": [
+      {
+        "from": "orange",
+        "to": "blue",
+        "optimalBoarding": "montmorency"
+      },
+      {
+        "from": "blue",
+        "to": "orange",
+        "toDirection": "cote-vertu",
+        "optimalBoarding": "snowdon"
+      },
+      {
+        "from": "blue",
+        "to": "orange",
+        "toDirection": "montmorency",
+        "optimalBoarding": "saint-michel"
+      }
+    ]
   },
   {
     "id": "jarry",

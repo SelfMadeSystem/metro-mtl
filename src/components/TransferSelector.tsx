@@ -233,40 +233,39 @@ export default function TransferSelector({ transfers }: TransferSelectorProps) {
                 </div>
 
                 {/* Optimal Boarding Information */}
-                {selectedDirection.optimalBoarding && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <div className="flex items-start space-x-3">
-                      <svg
-                        className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <div>
-                        <h4 className="font-medium text-yellow-800 mb-1">
-                          {selectedDirection.description
-                            ? "Transfer Instructions"
-                            : "Optimal Boarding"}
-                        </h4>
-                        <p className="text-yellow-700 text-sm">
-                          {selectedDirection.description ||
-                            `Best to board towards ${selectedDirection.optimalBoarding}`}
-                        </p>
-                      </div>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <svg
+                      className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <div>
+                      <h4 className="font-medium text-yellow-800 mb-1">
+                        {selectedDirection.optimalBoarding
+                          ? "Optimal Boarding"
+                          : "Transfer Instructions"}
+                      </h4>
+                      <p className="text-yellow-700 text-sm">
+                        {selectedDirection.optimalBoarding
+                          ? `Best to board in ${selectedDirection.optimalBoarding}`
+                          : selectedDirection.description}
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
 
                 {/* Custom Description */}
                 {selectedDirection.description &&
-                  !selectedDirection.optimalBoarding && (
+                  selectedDirection.optimalBoarding && (
                     <div className="mt-3 text-gray-600 text-sm bg-gray-50 p-3 rounded-lg">
                       {selectedDirection.description}
                     </div>

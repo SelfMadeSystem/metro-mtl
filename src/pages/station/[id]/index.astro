@@ -57,7 +57,7 @@ const transfers = await Promise.all(
       ),
       optimalBoarding: await nameOrId(
         transfer.optimalBoarding,
-        (name) => `towards ${name.name}`
+        (name) => `direction ${name.name}`
       ),
     };
   })
@@ -69,7 +69,7 @@ const exits = await Promise.all(
       ...exit,
       optimalBoarding: await nameOrId(
         exit.optimalBoarding,
-        ({ name }) => `towards ${name}`
+        ({ name }) => `direction ${name}`
       ),
     };
   })
