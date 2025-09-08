@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   MetroPathFinder,
   type MetroPathStep,
@@ -24,6 +24,41 @@ export default function PathFinding({
   const [endSearch, setEndSearch] = useState("");
   const [showStartDropdown, setShowStartDropdown] = useState(false);
   const [showEndDropdown, setShowEndDropdown] = useState(false);
+
+  // Handle URL query parameters on component mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const startParam = urlParams.get("start");
+      const endParam = urlParams.get("end");
+
+      // Find stations by ID if they exist
+      const startStationExists =
+        startParam && stations.find((s) => s.id === startParam);
+      const endStationExists =
+        endParam && stations.find((s) => s.id === endParam);
+
+      if (startStationExists) {
+        setStartStation(startParam);
+      }
+      if (endStationExists) {
+        setEndStation(endParam);
+      }
+
+      // If both stations are valid, find the path
+      if (startStationExists && endStationExists) {
+        const result = pathFinder.findShortestPath(startParam, endParam);
+        setPath(result);
+        if (result) {
+          const pathSteps = pathFinder.pathToSteps(result);
+          console.log("Path Steps:", pathSteps);
+          setSteps(pathFinder.addOptimalBoardingInfo(pathSteps));
+        } else {
+          setSteps(null);
+        }
+      }
+    }
+  }, [stations, pathFinder]); // Run when stations data is available
 
   // Create searchable station options
   const stationOptions = useMemo(() => {
@@ -77,6 +112,13 @@ export default function PathFinding({
     setStartSearch("");
     setShowStartDropdown(false);
 
+    // Update URL parameters
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("start", stationId);
+      window.history.replaceState({}, "", url.toString());
+    }
+
     if (endStation) {
       handleFindPath(stationId, endStation);
     }
@@ -86,6 +128,13 @@ export default function PathFinding({
     setEndStation(stationId);
     setEndSearch("");
     setShowEndDropdown(false);
+
+    // Update URL parameters
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("end", stationId);
+      window.history.replaceState({}, "", url.toString());
+    }
 
     if (startStation) {
       handleFindPath(startStation, stationId);
@@ -276,8 +325,8 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.station.name}
         </a>
-        . Exit from the <span className="font-bold">{step.optimalBoarding}</span>{" "}
-        of the train.
+        . Exit from the{" "}
+        <span className="font-bold">{step.optimalBoarding}</span> of the train.
       </li>
     );
   } else {

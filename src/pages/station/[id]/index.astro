@@ -152,6 +152,45 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
             <div class="flex flex-wrap gap-2 justify-end">
               {lines.map((line) => <LinePill line={line.data} />)}
             </div>
+            <!-- Action Buttons -->
+            <div class="mt-3 flex flex-wrap gap-2 justify-end">
+              <a
+                href={`/travel?start=${station.id}`}
+                class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+                Travel from
+              </a>
+              <a
+                href={`/travel?end=${station.id}`}
+                class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+                </svg>
+                Travel to
+              </a>
+            </div>
             <!-- STM Link -->
             <a
               href={stmUrl}
