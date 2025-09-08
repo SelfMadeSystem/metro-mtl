@@ -3,3 +3,7 @@
 @theme {
   --breakpoint-xs: 27rem;
 }
+
+@utility bg-map {
+  background-image: url("../assets/bg-map.svg");
+}

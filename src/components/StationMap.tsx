@@ -17,7 +17,7 @@ export default function StationMap({
   const [hasLoaded, setHasLoaded] = useState(false);
 
   return (
-    <section className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <section className="bg-white/50 rounded-xl shadow-lg overflow-hidden">
       <div
         className="px-6 py-4 bg-gray-50 cursor-pointer"
         onClick={() => {
@@ -43,7 +43,7 @@ export default function StationMap({
             <img
               src={map}
               alt={alt}
-              className="max-w-full h-auto rounded-lg shadow-sm"
+              className="max-w-full h-auto rounded-lg shadow-sm bg-white"
               width={600}
             />
           )}

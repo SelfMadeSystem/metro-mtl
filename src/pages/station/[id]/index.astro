@@ -89,7 +89,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
   title={`${station.name} - Metro MTL`}
   description={`Information about ${station.name} metro station in Montreal, including maps and line connections.`}
 >
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="relative min-h-screen flex flex-col">
     <!-- Header Section -->
     <header class="bg-white shadow-lg border-b">
       <!-- Navigation -->
@@ -180,191 +180,186 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
     </header>
 
     <!-- Content Section -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Transfers -->
-      {
-        transfers.length > 0 && (
-          <TransferSelector transfers={transfers} client:load />
-        )
-      }
-
-      <!-- Exits -->
-      {
-        exits.length > 0 && (
-          <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Exits</h2>
-            <ul class="list-disc list-inside space-y-2">
-              {exits.map((exit) => (
-                <li class="text-gray-700">
-                  <span class="font-medium">{exit.name}</span>
-                  {exit.optimalBoarding && (
-                    <span class="text-sm text-gray-500">
-                      &nbsp;•{" "}
-                      {exit.description ??
-                        `Optimal boarding: ${exit.optimalBoarding}`}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )
-      }
-
-      <!-- Station Features -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-map w-full flex-grow">
+      <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Transfers -->
         {
-          station.accessible && (
-            <div class="bg-white rounded-lg p-4 shadow-sm border border-green-200">
-              <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <svg
-                    class="w-6 h-6 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="font-semibold text-gray-900">Accessible</h3>
-                  <p class="text-sm text-gray-600">Wheelchair accessible</p>
-                </div>
-              </div>
+          transfers.length > 0 && (
+            <TransferSelector transfers={transfers} client:load />
+          )
+        }
+        <!-- Exits -->
+        {
+          exits.length > 0 && (
+            <div class="mb-8">
+              <h2 class="text-2xl font-semibold text-gray-900 mb-4">Exits</h2>
+              <ul class="list-disc list-inside space-y-2">
+                {exits.map((exit) => (
+                  <li class="text-gray-700">
+                    <span class="font-medium">{exit.name}</span>
+                    {exit.optimalBoarding && (
+                      <span class="text-sm text-gray-500">
+                        &nbsp;•{" "}
+                        {exit.description ??
+                          `Optimal boarding: ${exit.optimalBoarding}`}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           )
         }
-
-        {
-          station.parking && (
-            <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-200">
-              <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <svg
-                    class="w-6 h-6 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="font-semibold text-gray-900">Parking</h3>
-                  <p class="text-sm text-gray-600">Parking available</p>
+        <!-- Station Features -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {
+            station.accessible && (
+              <div class="bg-white rounded-lg p-4 shadow-sm border border-green-200">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg
+                      class="w-6 h-6 text-green-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">Accessible</h3>
+                    <p class="text-sm text-gray-600">Wheelchair accessible</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        }
-      </div>
-
-      <!-- Maps Section -->
-      <div class="flex flex-col gap-8">
-        <!-- Network Map -->
-        <StationMap
-          map={network}
-          alt={`Network map at ${station.name} station`}
-          title="To satisfy the TypeScript compiler"
-          description="The actual slots are being passed, not these props"
-          client:load
-        >
-          <Fragment slot="title">
-            <svg
-              class="w-6 h-6 text-green-600 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-              ></path>
-            </svg>
-            Network Connection
-          </Fragment>
-          <Fragment slot="description">
-            Metro network view from {station.name}
-          </Fragment>
-        </StationMap>
-
-        <!-- Around Station -->
-        <StationMap
-          map={autour}
-          alt={`Map around ${station.name} station`}
-          title="To satisfy the TypeScript compiler"
-          description="The actual slots are being passed, not these props"
-          client:load
-        >
-          <Fragment slot="title">
-            <svg
-              class="w-6 h-6 text-blue-600 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              ></path>
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            Around the Station
-          </Fragment>
-          <Fragment slot="description">
-            Points of interest and amenities near {station.name}
-          </Fragment>
-        </StationMap>
-
-
-        <!-- Neighborhood Map -->
-        <StationMap
-          map={quartier}
-          alt={`Neighborhood map at ${station.name} station`}
-          title="To satisfy the TypeScript compiler"
-          description="The actual slots are being passed, not these props"
-          client:load
-        >
-          <Fragment slot="title">
-            <svg
-              class="w-6 h-6 text-purple-600 mr-3"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-              ></path>
-            </svg>
-            Neighborhood
-          </Fragment>
-          <Fragment slot="description">
-            Local area and district around {station.name}
-          </Fragment>
-        </StationMap>
-      </div>
-    </main>
+            )
+          }
+          {
+            station.parking && (
+              <div class="bg-white rounded-lg p-4 shadow-sm border border-blue-200">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <svg
+                      class="w-6 h-6 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">Parking</h3>
+                    <p class="text-sm text-gray-600">Parking available</p>
+                  </div>
+                </div>
+              </div>
+            )
+          }
+        </div>
+        <!-- Maps Section -->
+        <div class="flex flex-col gap-8">
+          <!-- Network Map -->
+          <StationMap
+            map={network}
+            alt={`Network map at ${station.name} station`}
+            title="To satisfy the TypeScript compiler"
+            description="The actual slots are being passed, not these props"
+            client:load
+          >
+            <Fragment slot="title">
+              <svg
+                class="w-6 h-6 text-green-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                ></path>
+              </svg>
+              Network Connection
+            </Fragment>
+            <Fragment slot="description">
+              Metro network view from {station.name}
+            </Fragment>
+          </StationMap>
+          <!-- Around Station -->
+          <StationMap
+            map={autour}
+            alt={`Map around ${station.name} station`}
+            title="To satisfy the TypeScript compiler"
+            description="The actual slots are being passed, not these props"
+            client:load
+          >
+            <Fragment slot="title">
+              <svg
+                class="w-6 h-6 text-blue-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              Around the Station
+            </Fragment>
+            <Fragment slot="description">
+              Points of interest and amenities near {station.name}
+            </Fragment>
+          </StationMap>
+          <!-- Neighborhood Map -->
+          <StationMap
+            map={quartier}
+            alt={`Neighborhood map at ${station.name} station`}
+            title="To satisfy the TypeScript compiler"
+            description="The actual slots are being passed, not these props"
+            client:load
+          >
+            <Fragment slot="title">
+              <svg
+                class="w-6 h-6 text-purple-600 mr-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                ></path>
+              </svg>
+              Neighborhood
+            </Fragment>
+            <Fragment slot="description">
+              Local area and district around {station.name}
+            </Fragment>
+          </StationMap>
+        </div>
+      </main>
+    </div>
   </div>
 </Layout>
