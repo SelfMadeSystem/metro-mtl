@@ -38,6 +38,7 @@ const stationSchema = z.object({
 });
 
 export type Station = z.infer<typeof stationSchema>;
+export type StationWithLines = Omit<Station, "lines"> & { lines: Line[] };
 
 // Define a schema for metro lines
 const lineSchema = z.object({
@@ -50,6 +51,7 @@ const lineSchema = z.object({
 });
 
 export type Line = z.infer<typeof lineSchema>;
+export type LineWithStations = Omit<Line, "stations"> & { stations: Station[] };
 
 // Define collections
 const stationsCollection = defineCollection({

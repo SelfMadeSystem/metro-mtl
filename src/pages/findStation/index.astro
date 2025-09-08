@@ -1,0 +1,20 @@
+---
+import PathFinding from "../../components/PathFinding";
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const linesData = await getCollection("lines");
+const lines = linesData.map((line) => line.data);
+const linesById = Object.fromEntries(lines.map((line) => [line.id, line]));
+const stationsData = await getCollection("stations");
+const stations = stationsData.map((station) => ({
+  ...station.data,
+  lines: station.data.lines
+    .map(({ id }) => linesById[id])
+    .filter((line): line is NonNullable<typeof line> => Boolean(line)),
+}));
+---
+
+<Layout title="Find Path Between Stations">
+  <PathFinding stations={stations} lines={lines} client:load />
+</Layout>
