@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import LinePill from "./LinePill";
 import type { Line } from "../content.config";
 import clsx from "clsx";
@@ -64,6 +64,9 @@ export default function TransferSelector({ transfers }: TransferSelectorProps) {
   const [selectedDirection, setSelectedDirection] =
     useState<TransferWithData | null>(selectedGroup?.directions[0] || null);
 
+  // Ref for scrolling to transfer details on mobile
+  const transferDetailsRef = useRef<HTMLDivElement>(null);
+
   // Update selected direction when group changes
   const handleGroupChange = (group: GroupedTransfer) => {
     if (selectedGroup === group) {
@@ -73,6 +76,20 @@ export default function TransferSelector({ transfers }: TransferSelectorProps) {
     }
     setSelectedGroup(group);
     setSelectedDirection(group.directions[0]);
+    scrollIntoView();
+  };
+
+  // Handle direction selection with scroll on mobile
+  const scrollIntoView = () => {
+    // Scroll to transfer details on mobile devices (viewport width < 768px)
+    if (window.innerWidth < 768) {
+      setTimeout(() => {
+        transferDetailsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100); // Small delay to ensure DOM has updated
+    }
   };
 
   if (groupedTransfers.length === 0) {
@@ -122,7 +139,10 @@ export default function TransferSelector({ transfers }: TransferSelectorProps) {
 
       {/* Selected Transfer Details */}
       {selectedGroup && (
-        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+        <div
+          ref={transferDetailsRef}
+          className="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+        >
           {/* Direction Selection (if multiple directions available) */}
           {selectedGroup.directions.length > 1 && (
             <div className="mb-6">
