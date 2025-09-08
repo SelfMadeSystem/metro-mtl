@@ -142,7 +142,14 @@
     "id": "square-victoria",
     "name": "Square-Victoria-OACI",
     "stmId": "square-victoria-oaci",
-    "lines": ["orange"]
+    "lines": ["orange"],
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "cote-vertu"
+      }
+    ]
   },
   {
     "id": "place-darmes",
@@ -487,12 +494,26 @@
   {
     "id": "cote-des-neiges",
     "name": "Côte-des-Neiges",
-    "lines": ["blue"]
+    "lines": ["blue"],
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "saint-michel"
+      }
+    ]
   },
   {
     "id": "universite-de-montreal",
     "name": "Université-de-Montréal",
-    "lines": ["blue"]
+    "lines": ["blue"],
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "saint-michel"
+      }
+    ]
   },
   {
     "id": "edouard-montpetit",
