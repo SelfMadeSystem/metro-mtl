@@ -1,5 +1,9 @@
 import { useState, useMemo } from "react";
-import { MetroPathFinder, type MetroPathStep } from "../pathFinding";
+import {
+  MetroPathFinder,
+  type MetroPathStep,
+  type MetroPathStepOptimal,
+} from "../pathFinding";
 import type { Line, StationWithLines } from "../content.config";
 import { normalizeString } from "../utils";
 import LinePill from "./LinePill";
@@ -15,7 +19,7 @@ export default function PathFinding({
   const [startStation, setStartStation] = useState("");
   const [endStation, setEndStation] = useState("");
   const [path, setPath] = useState<StationWithLines[] | null>(null);
-  const [steps, setSteps] = useState<MetroPathStep[] | null>(null);
+  const [steps, setSteps] = useState<MetroPathStepOptimal[] | null>(null);
   const [startSearch, setStartSearch] = useState("");
   const [endSearch, setEndSearch] = useState("");
   const [showStartDropdown, setShowStartDropdown] = useState(false);
@@ -61,7 +65,8 @@ export default function PathFinding({
     setPath(result);
     if (result) {
       const pathSteps = pathFinder.pathToSteps(result);
-      setSteps(pathSteps);
+      console.log("Path Steps:", pathSteps);
+      setSteps(pathFinder.addOptimalBoardingInfo(pathSteps));
     } else {
       setSteps(null);
     }
@@ -230,6 +235,8 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.towards.name}
         </a>
+        . Board at the <span className="font-bold">{step.optimalBoarding}</span>{" "}
+        of the train.
       </li>
     );
   } else if (step.type === "transfer") {
@@ -246,13 +253,15 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         </a>{" "}
         at{" "}
         <a
-          href={`/station/${step.at.id}`}
+          href={`/station/${step.station.id}`}
           className="font-bold underline"
           target="_blank"
           rel="noopener noreferrer"
         >
-          {step.at.name}
+          {step.station.name}
         </a>
+        . Board at the <span className="font-bold">{step.optimalBoarding}</span>{" "}
+        of the train.
       </li>
     );
   } else if (step.type === "exit") {
@@ -267,6 +276,8 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.station.name}
         </a>
+        . Exit from the <span className="font-bold">{step.optimalBoarding}</span>{" "}
+        of the train.
       </li>
     );
   } else {

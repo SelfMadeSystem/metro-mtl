@@ -25,6 +25,19 @@ const transferSchema = z.object({
 
 export type Transfer = z.infer<typeof transferSchema>;
 
+// Pathfinding Transfer information schema
+const pathfindingTransferSchema = z.object({
+  fromLine: reference("lines"),
+  toLine: reference("lines"),
+  sameDirection: z
+    .array(z.tuple([reference("stations"), reference("stations")]))
+    .optional(), // Pairs of stations indicating same direction transfers
+  crossDirection: z
+    .array(z.tuple([reference("stations"), reference("stations")]))
+    .optional(), // Pairs of stations indicating cross direction transfers
+});
+export type PathfindingTransfer = z.infer<typeof pathfindingTransferSchema>;
+
 // Define a schema for station metadata
 const stationSchema = z.object({
   id: z.string().min(1),
@@ -35,6 +48,11 @@ const stationSchema = z.object({
   stmId: z.string().optional(), // STM station ID (if different from 'id')
   accessible: z.boolean().optional(),
   parking: z.boolean().optional(),
+  pathfinding: z
+    .object({
+      transfers: z.array(pathfindingTransferSchema).optional(),
+    })
+    .optional(),
 });
 
 export type Station = z.infer<typeof stationSchema>;
