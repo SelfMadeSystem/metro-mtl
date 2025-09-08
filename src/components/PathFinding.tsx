@@ -212,23 +212,61 @@ function StepComponent({ step }: { step: MetroPathStep }) {
   if (step.type === "start") {
     return (
       <li>
-        Start at <strong>{step.station.name}</strong>{" "}
+        Start at{" "}
+        <a
+          href={`/station/${step.station.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.station.name}
+        </a>{" "}
         {<LinePill line={step.line} />} towards{" "}
-        <strong>{step.towards.name}</strong>
+        <a
+          href={`/station/${step.towards.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.towards.name}
+        </a>
       </li>
     );
   } else if (step.type === "transfer") {
     return (
       <li>
         Transfer to <LinePill line={step.toLine} /> towards{" "}
-        <strong>{step.towards.name}</strong> at{" "}
-        <strong>{step.at.name}</strong>
+        <a
+          href={`/station/${step.towards.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.towards.name}
+        </a>{" "}
+        at{" "}
+        <a
+          href={`/station/${step.at.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.at.name}
+        </a>
       </li>
     );
   } else if (step.type === "exit") {
     return (
       <li>
-        Exit at <strong>{step.station.name}</strong>
+        Exit at{" "}
+        <a
+          href={`/station/${step.station.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.station.name}
+        </a>
       </li>
     );
   } else {
