@@ -17,18 +17,18 @@ export default function StationMap({
   const [hasLoaded, setHasLoaded] = useState(false);
 
   return (
-    <section className="bg-white/50 rounded-xl shadow-lg overflow-hidden">
+    <section className="bg-white/50 rounded-xl shadow-lg overflow-hidden dark:bg-stm-black/50 dark:border dark:border-white/10">
       <div
-        className="px-6 py-4 bg-gray-50 cursor-pointer"
+        className="px-6 py-4 bg-gray-50 cursor-pointer dark:bg-stm-black/70"
         onClick={() => {
           setIsOpen(!isOpen);
           setHasLoaded(true);
         }}
       >
-        <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+        <h2 className="text-xl font-semibold text-gray-900 flex items-center dark:text-white">
           {title}
         </h2>
-        <p className="text-gray-600 mt-1">{description}</p>
+        <p className="text-gray-600 mt-1 dark:text-gray-200">{description}</p>
       </div>
       <motion.div
         initial={false}

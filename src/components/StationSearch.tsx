@@ -30,13 +30,13 @@ export default function StationSearch({
   const favoriteStations = getFavoriteStations(stations);
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-8 pb-8">
+    <div className="flex flex-col items-center mt-8 pb-8">
       <input
         type="text"
         placeholder="Search for a station..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full md:w-1/3 p-2 border border-gray-300 rounded"
+        className="w-full md:w-1/3 p-2 border rounded border-gray-300 dark:border-white dark:bg-stm-dark"
       />
       {query !== "" &&
         (filteredStations.length > 0 ? (
@@ -73,18 +73,25 @@ export default function StationSearch({
             <motion.div
               className="w-full"
               layout
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto", marginTop: "1rem" }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
               transition={{
                 layout: { duration: 0.3, ease: "circInOut" },
+                height: { duration: 0.3, ease: "circInOut" },
               }}
             >
-              <h2 className="text-2xl font-bold mb-4 text-center text-yellow-600">
+              <motion.h2
+                layout
+                className="text-2xl font-bold mb-4 text-center text-yellow-600"
+              >
                 ★ Favorite Stations
-              </h2>
-              <div className="flex flex-wrap justify-center gap-4 mx-8 mb-8">
-                <AnimatePresence>
+              </motion.h2>
+              <motion.div
+                className="relative flex flex-wrap justify-center gap-4 mx-8"
+                layout
+              >
+                <AnimatePresence mode="popLayout">
                   {favoriteStations.map((station) => (
                     <motion.div
                       key={station.id}
@@ -105,17 +112,17 @@ export default function StationSearch({
                     </motion.div>
                   ))}
                 </AnimatePresence>
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       )}
       {query === "" && (
         <motion.div
-          className="flex justify-between flex-wrap mx-8 gap-8"
+          className="flex justify-between flex-wrap mx-8 gap-8 mt-4"
           layout
           transition={{
-            layout: { duration: 0.3, ease: "circInOut" },
+            layout: { duration: 0, ease: "circInOut" },
           }}
         >
           {lines.map((line) => (

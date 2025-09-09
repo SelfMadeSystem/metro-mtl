@@ -2,8 +2,18 @@
 
 @theme {
   --breakpoint-xs: 27rem;
+  --color-stm-black: #140e0c;
+  --color-stm-dark: #353132;
+}
+
+@utility bg-map-light {
+  background-image: url("../assets/bg-map-light.svg");
+}
+
+@utility bg-map-dark {
+  background-image: url("../assets/bg-map-dark.svg");
 }
 
 @utility bg-map {
-  background-image: url("../assets/bg-map.svg");
+  @apply bg-map-light dark:bg-map-dark;
 }

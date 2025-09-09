@@ -34,7 +34,7 @@ export default function StationButton({
       <a
         href={`/station/${station.id}/`}
         className={clsx(
-          "static p-4 border border-gray-300 transition-all flex",
+          "static p-4 border border-gray-300 transition-all flex dark:bg-stm-black/50",
           line
             ? "rounded-r-2xl border-l-0 relative mr-8 hover:mr-0 hover:pr-12"
             : "rounded-2xl hover:shadow-lg"
@@ -68,10 +68,12 @@ export default function StationButton({
             onToggleFavorite(station.id);
           }}
           className={clsx(
-            "w-8 h-8 min-w-8 min-h-8 rounded-full border-2 transition-all flex items-center justify-center text-lg hover:scale-110",
+            "cursor-pointer w-8 h-8 min-w-8 min-h-8 rounded-full border-2 transition-all flex items-center justify-center text-lg hover:scale-110",
             isFavorite
               ? "bg-yellow-400 border-yellow-500 text-yellow-800"
-              : "bg-white border-gray-300 text-gray-500 hover:border-yellow-400 hover:text-yellow-600",
+              : `bg-white border-gray-300 text-gray-500 hover:border-yellow-400 hover:text-yellow-600
+              dark:bg-stm-dark dark:border-white dark:border-1 dark:text-white dark:hover:border-yellow-400 dark:hover:text-yellow-400
+              `,
             line ? "absolute top-2 right-2" : "float-right ml-4 -mt-2 -mr-2"
           )}
           title={isFavorite ? "Remove from favorites" : "Add to favorites"}

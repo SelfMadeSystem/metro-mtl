@@ -175,45 +175,17 @@ export default function PathFinding({
       <h1 className="text-2xl font-bold mb-4">Find Shortest Path</h1>
       <div className="mb-4 flex flex-wrap gap-4">
         {/* Start Station Selector */}
-        <div className="relative flex-1 min-w-64">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            From Station
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search start station..."
-              value={
-                selectedStartStation ? selectedStartStation.name : startSearch
-              }
-              onChange={(e) => {
-                setStartSearch(e.target.value);
-                setStartStation("");
-                setShowStartDropdown(true);
-              }}
-              onFocus={() => setShowStartDropdown(true)}
-              className="w-full border border-gray-300 bg-white/50 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {showStartDropdown && (
-              <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg">
-                {filteredStartStations.length > 0 ? (
-                  filteredStartStations.map((station) => (
-                    <button
-                      key={station.id}
-                      onClick={() => handleStartSelect(station.id)}
-                      className="w-full text-left p-2 hover:bg-blue-50 focus:bg-blue-50 border-none"
-                    >
-                      <div className="font-medium">{station.name}</div>
-                      <div className="text-sm text-gray-500">{station.id}</div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-2 text-gray-500">No stations found</div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <StationSelector
+          label="Start Station"
+          selectedStation={selectedStartStation}
+          search={startSearch}
+          setSearch={setStartSearch}
+          setStation={setStartStation}
+          setShowDropdown={setShowStartDropdown}
+          showDropdown={showStartDropdown}
+          filteredStations={filteredStartStations}
+          handleSelect={handleStartSelect}
+        />
 
         {/* Swap Button */}
         <div className="flex items-end">
@@ -236,43 +208,17 @@ export default function PathFinding({
         </div>
 
         {/* End Station Selector */}
-        <div className="relative flex-1 min-w-64">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            To Station
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search destination station..."
-              value={selectedEndStation ? selectedEndStation.name : endSearch}
-              onChange={(e) => {
-                setEndSearch(e.target.value);
-                setEndStation("");
-                setShowEndDropdown(true);
-              }}
-              onFocus={() => setShowEndDropdown(true)}
-              className="w-full border border-gray-300 bg-white/50 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {showEndDropdown && (
-              <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg">
-                {filteredEndStations.length > 0 ? (
-                  filteredEndStations.map((station) => (
-                    <button
-                      key={station.id}
-                      onClick={() => handleEndSelect(station.id)}
-                      className="w-full text-left p-2 hover:bg-blue-50 focus:bg-blue-50 border-none"
-                    >
-                      <div className="font-medium">{station.name}</div>
-                      <div className="text-sm text-gray-500">{station.id}</div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-2 text-gray-500">No stations found</div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <StationSelector
+          label="End Station"
+          selectedStation={selectedEndStation}
+          search={endSearch}
+          setSearch={setEndSearch}
+          setStation={setEndStation}
+          setShowDropdown={setShowEndDropdown}
+          showDropdown={showEndDropdown}
+          filteredStations={filteredEndStations}
+          handleSelect={handleEndSelect}
+        />
       </div>
 
       {/* Results */}
@@ -281,7 +227,7 @@ export default function PathFinding({
           <h2 className="text-xl font-semibold mb-2">
             Shortest Path ({path.length} stations):
           </h2>
-          <div className="bg-white/50 rounded p-4">
+          <div className="bg-white/50 rounded p-4 shadow-sm border border-gray-200 dark:bg-stm-black/50 dark:border-white/10">
             <ol className="list-decimal list-inside space-y-1">
               {steps.map((step, index) => (
                 <StepComponent key={index} step={step} />
@@ -290,8 +236,8 @@ export default function PathFinding({
           </div>
         </div>
       ) : startStation && endStation ? (
-        <div className="bg-red-50 border border-red-200 rounded p-4">
-          <p className="text-red-700">
+        <div className="bg-red-50 border border-red-200 rounded p-4 mt-4 dark:bg-red-900/30 dark:border-red-200/30">
+          <p className="text-red-700 dark:text-red-300">
             No path found between the selected stations.
           </p>
         </div>
@@ -307,6 +253,68 @@ export default function PathFinding({
           }}
         />
       )}
+    </div>
+  );
+}
+
+function StationSelector({
+  label,
+  selectedStation,
+  search,
+  setSearch,
+  setStation,
+  setShowDropdown,
+  showDropdown,
+  filteredStations,
+  handleSelect,
+}: {
+  label: string;
+  selectedStation: { id: string; name: string } | undefined;
+  search: string;
+  setSearch: (value: string) => void;
+  setStation: (value: string) => void;
+  setShowDropdown: (value: boolean) => void;
+  showDropdown: boolean;
+  filteredStations: { id: string; name: string; searchText: string }[];
+  handleSelect: (stationId: string) => void;
+}) {
+  return (
+    <div className="relative flex-1 min-w-64">
+      <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search start station..."
+          value={selectedStation ? selectedStation.name : search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setStation("");
+            setShowDropdown(true);
+          }}
+          onFocus={() => setShowDropdown(true)}
+          className="w-full border border-gray-300 bg-white/50 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-stm-black/50 dark:border-white"
+        />
+        {showDropdown && (
+          <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg dark:bg-stm-black/50 dark:border-white">
+            {filteredStations.length > 0 ? (
+              filteredStations.map((station) => (
+                <button
+                  key={station.id}
+                  onClick={() => handleSelect(station.id)}
+                  className="cursor-pointer w-full text-left p-2 hover:bg-blue-50 focus:bg-blue-50 border-none dark:hover:bg-stm-dark/30 dark:focus:bg-stm-black/70"
+                >
+                  <div className="font-medium">{station.name}</div>
+                  <div className="text-sm text-gray-500">{station.id}</div>
+                </button>
+              ))
+            ) : (
+              <div className="p-2 text-gray-500">No stations found</div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

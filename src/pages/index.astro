@@ -23,15 +23,11 @@ const stationsByLine = lines.reduce(
 );
 ---
 
-<Layout>
-  <h1 class="text-3xl font-bold mb-6 text-center mt-8">
-    Metro Montréal Stations
-  </h1>
-  <StationSearch
-    client:load
-    {stations}
-    {lines}
-    {lineById}
-    {stationsByLine}
-  />
+<Layout
+  ><div class="min-h-screen bg-map">
+    <h1 class="text-3xl font-bold mb-6 text-center pt-8">
+      Metro Montréal Stations
+    </h1>
+    <StationSearch client:load {stations} {lines} {lineById} {stationsByLine} />
+  </div>
 </Layout>
