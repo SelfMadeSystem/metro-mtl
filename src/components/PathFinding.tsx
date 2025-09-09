@@ -297,7 +297,7 @@ function StationSelector({
           className="w-full border border-gray-300 bg-white/50 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-stm-black/50 dark:border-white"
         />
         {showDropdown && (
-          <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg dark:bg-stm-black/50 dark:border-white">
+          <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg dark:bg-stm-black dark:border-white">
             {filteredStations.length > 0 ? (
               filteredStations.map((station) => (
                 <button
