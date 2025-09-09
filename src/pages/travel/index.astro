@@ -16,5 +16,7 @@ const stations = stationsData.map((station) => ({
 ---
 
 <Layout title="Find Path Between Stations">
-  <PathFinding stations={stations} lines={lines} client:load />
+  <div class="min-h-screen bg-map">
+    <PathFinding stations={stations} lines={lines} client:load />
+  </div>
 </Layout>

@@ -141,6 +141,35 @@ export default function PathFinding({
     }
   };
 
+  const handleSwapStations = () => {
+    const prevStart = startStation;
+    setStartStation(endStation);
+    setEndStation(prevStart);
+
+    // Update URL parameters
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (endStation) {
+        url.searchParams.set("start", endStation);
+      } else {
+        url.searchParams.delete("start");
+      }
+      if (prevStart) {
+        url.searchParams.set("end", prevStart);
+      } else {
+        url.searchParams.delete("end");
+      }
+      window.history.replaceState({}, "", url.toString());
+    }
+
+    if (endStation && prevStart) {
+      handleFindPath(endStation, prevStart);
+    } else {
+      setPath(null);
+      setSteps(null);
+    }
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Find Shortest Path</h1>
@@ -163,7 +192,7 @@ export default function PathFinding({
                 setShowStartDropdown(true);
               }}
               onFocus={() => setShowStartDropdown(true)}
-              className="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 bg-white/50 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {showStartDropdown && (
               <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg">
@@ -186,6 +215,26 @@ export default function PathFinding({
           </div>
         </div>
 
+        {/* Swap Button */}
+        <div className="flex items-end">
+          <button
+            onClick={handleSwapStations}
+            className="cursor-pointer bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            title="Swap Start and End Stations"
+          >
+            <svg
+              className="w-6 h-6"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="white"
+                d="M21,9L17,5V8H10V10H17V13M7,11L3,15L7,19V16H14V14H7V11Z"
+              />
+            </svg>
+          </button>
+        </div>
+
         {/* End Station Selector */}
         <div className="relative flex-1 min-w-64">
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -202,7 +251,7 @@ export default function PathFinding({
                 setShowEndDropdown(true);
               }}
               onFocus={() => setShowEndDropdown(true)}
-              className="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 bg-white/50 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {showEndDropdown && (
               <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg">
@@ -232,7 +281,7 @@ export default function PathFinding({
           <h2 className="text-xl font-semibold mb-2">
             Shortest Path ({path.length} stations):
           </h2>
-          <div className="bg-gray-50 rounded p-4">
+          <div className="bg-white/50 rounded p-4">
             <ol className="list-decimal list-inside space-y-1">
               {steps.map((step, index) => (
                 <StepComponent key={index} step={step} />
