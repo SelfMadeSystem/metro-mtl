@@ -151,6 +151,53 @@
               "position": "back"
             }
           }
+        },
+        {
+          "fromLine": "blue",
+          "toLine": "orange",
+          "fromDirection": "snowdon",
+          "toDirection": "montmorency",
+          "boarding": {
+            "front": {
+              "car": 3,
+              "door": 1,
+              "position": "front"
+            },
+            "middle": {
+              "car": 4,
+              "door": 1,
+              "position": "middle"
+            },
+            "back": {
+              "car": -3,
+              "door": 1,
+              "position": "back"
+            }
+          },
+          "oppositeDoors": true
+        },
+        {
+          "fromLine": "blue",
+          "toLine": "orange",
+          "fromDirection": "snowdon",
+          "toDirection": "cote-vertu",
+          "boarding": {
+            "front": {
+              "car": -3,
+              "door": 1,
+              "position": "back"
+            },
+            "middle": {
+              "car": 4,
+              "door": 1,
+              "position": "middle"
+            },
+            "back": {
+              "car": 3,
+              "door": 1,
+              "position": "back"
+            }
+          }
         }
       ]
     }
