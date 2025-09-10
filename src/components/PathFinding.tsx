@@ -327,7 +327,7 @@ function StepComponent({ step }: { step: MetroPathStep }) {
   let exitingInfo: React.ReactNode = null;
   let exitingDoors: React.ReactNode = null;
 
-  if ("boarding" in step && step.boarding) {
+  if ("boarding" in step && step.boarding && step.boarding.position !== "none") {
     if (step.boarding.car !== undefined && step.boarding.door === undefined) {
       boardingInfo = (
         <>
@@ -369,7 +369,7 @@ function StepComponent({ step }: { step: MetroPathStep }) {
     }
   }
 
-  if ("exiting" in step && step.exiting) {
+  if ("exiting" in step && step.exiting && step.exiting.position !== "none") {
     if (step.exiting.car !== undefined && step.exiting.door === undefined) {
       exitingInfo = (
         <>
