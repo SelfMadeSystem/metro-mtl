@@ -214,6 +214,11 @@ export class MetroPathFinder {
 
       switch (step.type) {
         case "exit": {
+          if (steps.length === 1) {
+            // user prolly trolling
+            step.exiting = { position: "none" };
+            break;
+          }
           if (i !== steps.length - 1) {
             throw new Error("Exit must be the last step");
           }
@@ -222,8 +227,21 @@ export class MetroPathFinder {
             break;
           }
 
-          // TODO: choose best exit / allow user to choose
-          const exit = step.station.exits[0];
+          const prevStep = steps[i - 1];
+
+          // TODO: allow user to choose
+          const exit =
+            step.station.lines.length > 1
+              ? step.station.exits.find((s) => {
+                  if (prevStep.type === "transfer") {
+                    return s.optimalBoarding?.id === prevStep.toDirection.id;
+                  }
+                  if (prevStep.type === "start") {
+                    return s.optimalBoarding?.id === prevStep.towards.id;
+                  }
+                  return false;
+                })
+              : step.station.exits[0];
 
           // No boarding info if no exit info
           if (!exit || (!exit.boarding && !exit.optimalBoarding)) {

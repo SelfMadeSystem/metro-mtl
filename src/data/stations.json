@@ -44,6 +44,39 @@
     "name": "Snowdon",
     "lines": ["orange", "blue"],
     "accessible": true,
+    "exits": [
+      {
+        "id": "orange",
+        "name": "Orange Line Exit",
+        "line": "orange",
+        "optimalBoarding": "montmorency",
+        "boarding": {
+          "montmorency": {
+            "position": "front",
+            "car": 2,
+            "door": 1
+          },
+          "cote-vertu": {
+            "position": "back",
+            "car": -2,
+            "door": 1
+          }
+        }
+      },
+      {
+        "id": "blue",
+        "name": "Blue Line Exit",
+        "line": "blue",
+        "optimalBoarding": "snowdon",
+        "boarding": {
+          "snowdon": {
+            "position": "front",
+            "car": 1,
+            "door": 1
+          }
+        }
+      }
+    ],
     "transfers": [
       {
         "from": "orange",
