@@ -842,7 +842,19 @@
       {
         "id": "main",
         "name": "Main Exit",
-        "optimalBoarding": "saint-michel"
+        "optimalBoarding": "saint-michel",
+        "boarding": {
+          "saint-michel": {
+            "position": "front",
+            "car": 4,
+            "door": 1
+          },
+          "snowdon": {
+            "position": "back",
+            "car": -4,
+            "door": 1
+          }
+        }
       }
     ]
   },
