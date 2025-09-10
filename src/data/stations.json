@@ -75,14 +75,49 @@
         {
           "fromLine": "orange",
           "toLine": "blue",
-          "sameDirection": [
-            ["cote-vertu", "saint-michel"],
-            ["montmorency", "snowdon"]
-          ],
-          "crossDirection": [
-            ["cote-vertu", "snowdon"],
-            ["montmorency", "saint-michel"]
-          ]
+          "fromDirection": "cote-vertu",
+          "toDirection": "saint-michel",
+          "boarding": {
+            "front": {
+              "car": 2,
+              "door": 1,
+              "position": "front"
+            },
+            "middle": {
+              "car": 3,
+              "door": 3,
+              "position": "middle"
+            },
+            "back": {
+              "car": -2,
+              "door": 1,
+              "position": "back"
+            }
+          },
+          "oppositeDoors": true
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "blue",
+          "fromDirection": "montmorency",
+          "toDirection": "saint-michel",
+          "boarding": {
+            "front": {
+              "car": -2,
+              "door": 1,
+              "position": "back"
+            },
+            "middle": {
+              "car": 3,
+              "door": 3,
+              "position": "middle"
+            },
+            "back": {
+              "car": 2,
+              "door": 1,
+              "position": "back"
+            }
+          }
         }
       ]
     }
@@ -147,23 +182,7 @@
         "toDirection": "angrignon",
         "description": "Descend to lower platform"
       }
-    ],
-    "pathfinding": {
-      "transfers": [
-        {
-          "fromLine": "green",
-          "toLine": "orange",
-          "sameDirection": [
-            ["angrignon", "montmorency"],
-            ["honore-beaugrand", "cote-vertu"]
-          ],
-          "crossDirection": [
-            ["angrignon", "cote-vertu"],
-            ["honore-beaugrand", "montmorency"]
-          ]
-        }
-      ]
-    }
+    ]
   },
   {
     "id": "georges-vanier",
@@ -325,7 +344,57 @@
         "to": "orange",
         "optimalBoarding": "saint-michel"
       }
-    ]
+    ],
+    "pathfinding": {
+      "transfers": [
+        {
+          "fromLine": "orange",
+          "toLine": "blue",
+          "fromDirection": "saint-michel",
+          "toDirection": "montmorency",
+          "singleBoarding": {
+            "position": "back",
+            "car": -2,
+            "door": 3
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "blue",
+          "fromDirection": "saint-michel",
+          "toDirection": "cote-vertu",
+          "singleBoarding": {
+            "position": "back",
+            "car": -2,
+            "door": 3
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "blue",
+          "fromDirection": "snowdon",
+          "toDirection": "montmorency",
+          "singleBoarding": {
+            "position": "front",
+            "car": 2,
+            "door": 3
+          },
+          "oppositeDoors": true
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "blue",
+          "fromDirection": "snowdon",
+          "toDirection": "cote-vertu",
+          "singleBoarding": {
+            "position": "front",
+            "car": 2,
+            "door": 3
+          },
+          "oppositeDoors": true
+        }
+      ]
+    }
   },
   {
     "id": "jarry",
@@ -716,7 +785,19 @@
       {
         "id": "main",
         "name": "Main Exit",
-        "optimalBoarding": "saint-michel"
+        "optimalBoarding": "saint-michel",
+        "boarding": {
+          "saint-michel": {
+            "position": "front",
+            "car": 1,
+            "door": 2
+          },
+          "snowdon": {
+            "position": "back",
+            "car": -1,
+            "door": 2
+          }
+        }
       }
     ]
   },

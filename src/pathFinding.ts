@@ -1,63 +1,38 @@
 import Graph from "graphology";
 import shortestPath from "graphology-shortest-path/unweighted";
-import type {
-  Line,
-  PathfindingTransfer,
-  StationWithLines,
-} from "./content.config";
+import type { Line, StationWithLines } from "./content.config";
 
-function inversePathfindingTransfer(
-  transfer: PathfindingTransfer
-): PathfindingTransfer {
-  return {
-    fromLine: transfer.toLine,
-    toLine: transfer.fromLine,
-    sameDirection: transfer.sameDirection
-      ? transfer.sameDirection.map(([a, b]) => [b, a])
-      : undefined,
-    crossDirection: transfer.crossDirection
-      ? transfer.crossDirection.map(([a, b]) => [b, a])
-      : undefined,
-  };
-}
+type BoardingInfo = {
+  position: "front" | "middle" | "back" | "none";
+  car?: number; // Car number (-9 to 9, where negative indicates from the back)
+  door?: number; // Door number (1-4)
+  oppositeDoors?: boolean; // If true, the doors will be on the opposite side of the train
+};
 
-type OptimalBoarding = "front" | "middle" | "back" | "none" | `none${number}`; // will remove noneX later
-
-function oppositeOptimalBoarding(boarding: OptimalBoarding): OptimalBoarding {
-  switch (boarding) {
-    case "front":
-      return "back";
-    case "back":
-      return "front";
-    case "middle":
-    case "none":
-    default:
-      return boarding;
-  }
-}
-
-type MetroPathStartStep = {
+export type MetroPathStartStep = {
   type: "start";
   station: StationWithLines;
   line: Line;
   towards: StationWithLines;
-  optimalBoarding?: OptimalBoarding;
+  boarding: BoardingInfo;
 };
 
-type MetroPathTransferStep = {
+export type MetroPathTransferStep = {
   type: "transfer";
   station: StationWithLines;
   fromLine: Line;
   toLine: Line;
-  towards: StationWithLines;
-  optimalBoarding?: OptimalBoarding;
+  fromDirection: StationWithLines;
+  toDirection: StationWithLines;
+  boarding: BoardingInfo;
+  exiting: BoardingInfo;
 };
 
-type MetroPathExitStep = {
+export type MetroPathExitStep = {
   type: "exit";
   station: StationWithLines;
   towards: StationWithLines | null;
-  optimalBoarding?: OptimalBoarding;
+  exiting: BoardingInfo;
 };
 
 export type MetroPathStep =
@@ -65,9 +40,10 @@ export type MetroPathStep =
   | MetroPathTransferStep
   | MetroPathExitStep;
 
-export type MetroPathStepOptimal = MetroPathStep & {
-  optimalBoarding: OptimalBoarding;
-};
+export type PartialMetroPathStep =
+  | Omit<MetroPathStartStep, "boarding">
+  | Omit<MetroPathTransferStep, "boarding" | "exiting">
+  | Omit<MetroPathExitStep, "exiting">;
 
 export class MetroPathFinder {
   private graph: Graph;
@@ -150,10 +126,10 @@ export class MetroPathFinder {
     }
   }
 
-  public pathToSteps(path: StationWithLines[]): MetroPathStep[] {
+  public pathToSteps(path: StationWithLines[]): PartialMetroPathStep[] {
     if (path.length === 0) return [];
 
-    const steps: MetroPathStep[] = [];
+    const steps: PartialMetroPathStep[] = [];
     let currentLine: Line | null = null;
     let prevTowards: StationWithLines | null = null;
 
@@ -202,6 +178,8 @@ export class MetroPathFinder {
           throw new Error("Invalid path: cannot determine transfer direction");
         }
 
+        const prevPrevTowards = prevTowards;
+
         prevTowards = towards;
 
         if (newLine && currentLine) {
@@ -210,7 +188,8 @@ export class MetroPathFinder {
             station: station,
             fromLine: currentLine,
             toLine: newLine,
-            towards,
+            fromDirection: prevPrevTowards!,
+            toDirection: towards,
           });
           currentLine = newLine;
         }
@@ -227,110 +206,158 @@ export class MetroPathFinder {
     return steps;
   }
 
-  public addOptimalBoardingInfo(
-    steps: MetroPathStep[]
-  ): MetroPathStepOptimal[] {
-    // Work backwards to assign optimal boarding info
-    let nextOptimalBoarding: OptimalBoarding = "none6";
-
+  public addBoardingInfo(
+    steps: Exclude<PartialMetroPathStep & Partial<MetroPathStep>, never>[]
+  ): MetroPathStep[] {
     for (let i = steps.length - 1; i >= 0; i--) {
       const step = steps[i];
 
       switch (step.type) {
         case "exit": {
-          const exit = step.station.exits?.[0];
-          if (!exit || !step.towards || !exit.optimalBoarding) {
-            nextOptimalBoarding = step.optimalBoarding = "none7";
-            continue;
+          if (i !== steps.length - 1) {
+            throw new Error("Exit must be the last step");
           }
-          switch (exit.optimalBoarding.id) {
-            case step.towards.id:
-              nextOptimalBoarding = "front";
-              break;
-            case "middle":
-              nextOptimalBoarding = "middle";
-              break;
-            // assume opposite direction. might verify later, but too lazy now
-            default:
-              nextOptimalBoarding = "back";
-              break;
+          if (!step.station.exits || !step.towards) {
+            step.exiting = { position: "none" };
+            break;
           }
-          step.optimalBoarding = nextOptimalBoarding;
+
+          // TODO: choose best exit / allow user to choose
+          const exit = step.station.exits[0];
+
+          // No boarding info if no exit info
+          if (!exit || (!exit.boarding && !exit.optimalBoarding)) {
+            step.exiting = { position: "none" };
+            break;
+          }
+
+          // Use optimal boarding if no boarding info
+          if (!exit.boarding && exit.optimalBoarding) {
+            const optimal = exit.optimalBoarding;
+            if (!step.towards) {
+              step.exiting = { position: "none" };
+              break;
+            }
+
+            // Determine direction
+            switch (optimal.id) {
+              case step.towards.id:
+                step.exiting = { position: "front" };
+                continue;
+              case "middle":
+                step.exiting = { position: "middle" };
+                continue;
+              default:
+                // TODO: Validate this
+                step.exiting = { position: "back" };
+                continue;
+            }
+          }
+
+          // This case shouldn't ever happen.
+          if (!exit.boarding) {
+            throw new Error("Exit should have boarding info at this point");
+          }
+
+          if (!(step.towards.id in exit.boarding)) {
+            // No boarding info for this direction
+            // Shouldn't happen if the data is correct
+            step.exiting = { position: "none" };
+            break;
+          }
+
+          step.exiting = exit.boarding[step.towards.id] || { position: "none" };
           break;
         }
         case "transfer": {
-          step.optimalBoarding = nextOptimalBoarding;
-          if (!step.station.pathfinding?.transfers) {
-            // TODO: Implement logic for regular transfers
-            nextOptimalBoarding = "none1";
-            continue;
+          if (i === 0 || i === steps.length - 1) {
+            throw new Error("Transfer cannot be the first or last step");
           }
-
-          const fromStep = steps[i - 1];
-          const from = fromStep.station;
-
-          if (!Array.isArray(step.station.pathfinding.transfers)) {
-            nextOptimalBoarding = "none2"; // TODO: Implement full logic here
-            continue;
+          const next = steps[i + 1];
+          if (next.type === "start") {
+            throw new Error("Invalid path: start cannot follow transfer");
           }
-
-          if (!fromStep.towards) {
-            nextOptimalBoarding = "none3";
-            continue;
+          if (!next.exiting) {
+            throw new Error("Next step must have had exiting info added first");
           }
-
-          let foundTransfer = step.station.pathfinding.transfers.find(
-            (transfer) =>
-              (transfer.fromLine.id === step.fromLine.id &&
-                transfer.toLine.id === step.toLine.id) ||
-              (transfer.fromLine.id === step.toLine.id &&
-                transfer.toLine.id === step.fromLine.id)
-          );
+          // Set this step's boarding to the next step's exiting
+          step.boarding = next.exiting;
 
           if (
-            foundTransfer &&
-            foundTransfer.fromLine.id === step.toLine.id &&
-            foundTransfer.toLine.id === step.fromLine.id
+            !step.station.pathfinding ||
+            !step.station.pathfinding.transfers
           ) {
-            foundTransfer = inversePathfindingTransfer(foundTransfer);
+            step.exiting = { position: "none" };
+            break;
           }
 
-          if (!foundTransfer) {
-            nextOptimalBoarding = "none4";
-            continue;
+          console.log(step.station.pathfinding.transfers, step);
+
+          const transfer = step.station.pathfinding.transfers.find((t) => {
+            return (
+              t.fromLine.id === step.fromLine.id &&
+              t.toLine.id === step.toLine.id &&
+              t.fromDirection.id === step.fromDirection.id &&
+              t.toDirection.id === step.toDirection.id
+            );
+          });
+
+          if (!transfer) {
+            step.exiting = { position: "none" };
+            break;
           }
 
-          const sameDirection = foundTransfer.sameDirection?.find(
-            ([a, b]) =>
-              a.id === fromStep.towards!.id && b.id === step.towards.id
-          );
-          if (sameDirection) {
-            // same direction transfer
-            // keep the same optimal boarding
-            continue;
+          const { oppositeDoors } = transfer;
+
+          if (!transfer.boarding && !transfer.singleBoarding) {
+            step.exiting = { position: "none", oppositeDoors };
+            break;
           }
 
-          const crossDirection = foundTransfer.crossDirection?.find(
-            ([a, b]) =>
-              a.id === fromStep.towards!.id && b.id === step.towards.id
-          );
-          if (crossDirection) {
-            // cross platform transfer
-            nextOptimalBoarding = oppositeOptimalBoarding(nextOptimalBoarding);
-            continue;
+          if (!transfer.boarding && transfer.singleBoarding) {
+            step.exiting = { ...transfer.singleBoarding, oppositeDoors };
+            break;
           }
 
-          nextOptimalBoarding = "none5";
+          if (!transfer.boarding) {
+            throw new Error("Transfer should have boarding info at this point");
+          }
 
+          // No boarding info for this direction. Probably because it's "none"
+          if (!(next.exiting.position in transfer.boarding)) {
+            step.exiting = { position: "none", oppositeDoors };
+            break;
+          }
+
+          step.exiting = {
+            ...(transfer.boarding[
+              next.exiting.position as keyof typeof transfer.boarding
+            ] || {
+              position: "none",
+            }),
+            oppositeDoors,
+          };
           break;
         }
         case "start": {
-          step.optimalBoarding = nextOptimalBoarding;
+          if (i !== 0) {
+            throw new Error("Start must be the first step");
+          }
+          const next = steps[i + 1];
+          if (!next || next.type === "start") {
+            throw new Error(
+              "Invalid path: start must be followed by transfer/exit"
+            );
+          }
+          if (!next.exiting) {
+            throw new Error("Next step must have had exiting info added first");
+          }
+          step.boarding = next.exiting;
           break;
         }
       }
     }
 
-    return steps as MetroPathStepOptimal[];
+    return steps as MetroPathStep[];
   }
 }

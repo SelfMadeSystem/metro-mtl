@@ -1,6 +1,12 @@
 import { defineCollection, z, reference } from "astro:content";
 import { file } from "astro/loaders";
 
+const boardingInfo = z.object({
+  position: z.enum(["front", "middle", "back", "none"]), // Position in the car
+  car: z.number().min(-9).max(9).optional(), // Car number (-9 to 9, where negative indicates from the back)
+  door: z.number().min(1).max(4).optional(), // Door number (1-4)
+});
+
 // Define exit schema
 const exitSchema = z.object({
   id: z.string().min(1),
@@ -9,6 +15,8 @@ const exitSchema = z.object({
   address: z.string().min(1).optional(), // e.g., "495, rue Gilford"
   optimalBoarding: reference("stations").optional(), // Optimal boarding direction (e.g., "towards Snowdon", "middle of train")
   description: z.string().optional(), // Additional details
+  // boarding info for wayfinding
+  boarding: z.record(boardingInfo).optional(),
 });
 
 export type Exit = z.infer<typeof exitSchema>;
@@ -29,12 +37,17 @@ export type Transfer = z.infer<typeof transferSchema>;
 const pathfindingTransferSchema = z.object({
   fromLine: reference("lines"),
   toLine: reference("lines"),
-  sameDirection: z
-    .array(z.tuple([reference("stations"), reference("stations")]))
-    .optional(), // Pairs of stations indicating same direction transfers
-  crossDirection: z
-    .array(z.tuple([reference("stations"), reference("stations")]))
-    .optional(), // Pairs of stations indicating cross direction transfers
+  fromDirection: reference("stations"),
+  toDirection: reference("stations"),
+  // one of boarding or singleBoarding should be provided
+  boarding: z.object({
+    // boarding info for the *next* transfer/exit
+    front: boardingInfo,
+    middle: boardingInfo,
+    back: boardingInfo,
+  }).optional(),
+  singleBoarding: boardingInfo.optional(), // If the same boarding applies no matter the next transfer/exit
+  oppositeDoors: z.boolean().optional(), // If true, the doors will be on the opposite side of the train
 });
 export type PathfindingTransfer = z.infer<typeof pathfindingTransferSchema>;
 

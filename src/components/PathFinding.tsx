@@ -1,9 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import {
-  MetroPathFinder,
-  type MetroPathStep,
-  type MetroPathStepOptimal,
-} from "../pathFinding";
+import { MetroPathFinder, type MetroPathStep } from "../pathFinding";
 import type { Line, StationWithLines } from "../content.config";
 import { normalizeString } from "../utils";
 import LinePill from "./LinePill";
@@ -19,7 +15,7 @@ export default function PathFinding({
   const [startStation, setStartStation] = useState("");
   const [endStation, setEndStation] = useState("");
   const [path, setPath] = useState<StationWithLines[] | null>(null);
-  const [steps, setSteps] = useState<MetroPathStepOptimal[] | null>(null);
+  const [steps, setSteps] = useState<MetroPathStep[] | null>(null);
   const [startSearch, setStartSearch] = useState("");
   const [endSearch, setEndSearch] = useState("");
   const [showStartDropdown, setShowStartDropdown] = useState(false);
@@ -52,7 +48,7 @@ export default function PathFinding({
         if (result) {
           const pathSteps = pathFinder.pathToSteps(result);
           console.log("Path Steps:", pathSteps);
-          setSteps(pathFinder.addOptimalBoardingInfo(pathSteps));
+          setSteps(pathFinder.addBoardingInfo(pathSteps));
         } else {
           setSteps(null);
         }
@@ -101,7 +97,7 @@ export default function PathFinding({
     if (result) {
       const pathSteps = pathFinder.pathToSteps(result);
       console.log("Path Steps:", pathSteps);
-      setSteps(pathFinder.addOptimalBoardingInfo(pathSteps));
+      setSteps(pathFinder.addBoardingInfo(pathSteps));
     } else {
       setSteps(null);
     }
@@ -319,7 +315,102 @@ function StationSelector({
   );
 }
 
+function absToName(position: number) {
+  if (position > 0) return `front `;
+  if (position < 0) return `back`;
+  throw new Error("Position cannot be zero");
+}
+
 function StepComponent({ step }: { step: MetroPathStep }) {
+  let boardingInfo: React.ReactNode = null;
+  let boardingDoors: React.ReactNode = null;
+  let exitingInfo: React.ReactNode = null;
+  let exitingDoors: React.ReactNode = null;
+
+  if ("boarding" in step && step.boarding) {
+    if (step.boarding.car !== undefined && step.boarding.door === undefined) {
+      boardingInfo = (
+        <>
+          Board on car{" "}
+          <span className="font-bold">{Math.abs(step.boarding.car)}</span>
+          from the {absToName(step.boarding.car)} of the train.
+        </>
+      );
+    } else if (
+      step.boarding.car !== undefined &&
+      step.boarding.door !== undefined
+    ) {
+      boardingInfo = (
+        <>
+          Board on car{" "}
+          <span className="font-bold">{Math.abs(step.boarding.car)}</span>, door{" "}
+          <span className="font-bold">{step.boarding.door}</span> from the{" "}
+          {absToName(step.boarding.car)} of the train.
+        </>
+      );
+    } else {
+      boardingInfo = (
+        <>
+          Board at the{" "}
+          <span className="font-bold">{step.boarding.position}</span> of the
+          train.
+        </>
+      );
+    }
+
+    if (step.boarding.oppositeDoors) {
+      boardingDoors = (
+        <>
+          {" "}
+          (Doors will open on the{" "}
+          <span className="font-bold">opposite side</span> of the train)
+        </>
+      );
+    }
+  }
+
+  if ("exiting" in step && step.exiting) {
+    if (step.exiting.car !== undefined && step.exiting.door === undefined) {
+      exitingInfo = (
+        <>
+          Exit from car{" "}
+          <span className="font-bold">{Math.abs(step.exiting.car)}</span>
+          from the {absToName(step.exiting.car)} of the train.
+        </>
+      );
+    } else if (
+      step.exiting.car !== undefined &&
+      step.exiting.door !== undefined
+    ) {
+      exitingInfo = (
+        <>
+          Exit from car{" "}
+          <span className="font-bold">{Math.abs(step.exiting.car)}</span>, door{" "}
+          <span className="font-bold">{step.exiting.door}</span> from the{" "}
+          {absToName(step.exiting.car)} of the train.
+        </>
+      );
+    } else {
+      exitingInfo = (
+        <>
+          Exit from the{" "}
+          <span className="font-bold">{step.exiting.position}</span> of the
+          train.
+        </>
+      );
+    }
+
+    if (step.exiting.oppositeDoors) {
+      exitingDoors = (
+        <>
+          {" "}
+          (Doors will open on the{" "}
+          <span className="font-bold">opposite side</span> of the train)
+        </>
+      );
+    }
+  }
+
   if (step.type === "start") {
     return (
       <li>
@@ -341,8 +432,8 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.towards.name}
         </a>
-        . Board at the <span className="font-bold">{step.optimalBoarding}</span>{" "}
-        of the train.
+        . {boardingInfo}
+        {boardingDoors}
       </li>
     );
   } else if (step.type === "transfer") {
@@ -350,12 +441,12 @@ function StepComponent({ step }: { step: MetroPathStep }) {
       <li>
         Transfer to <LinePill line={step.toLine} /> towards{" "}
         <a
-          href={`/station/${step.towards.id}`}
+          href={`/station/${step.toDirection.id}`}
           className="font-bold underline"
           target="_blank"
           rel="noopener noreferrer"
         >
-          {step.towards.name}
+          {step.toDirection.name}
         </a>{" "}
         at{" "}
         <a
@@ -366,8 +457,8 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.station.name}
         </a>
-        . Board at the <span className="font-bold">{step.optimalBoarding}</span>{" "}
-        of the train.
+        . {boardingInfo}
+        {boardingDoors}
       </li>
     );
   } else if (step.type === "exit") {
@@ -382,8 +473,8 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.station.name}
         </a>
-        . Exit from the{" "}
-        <span className="font-bold">{step.optimalBoarding}</span> of the train.
+        . {exitingInfo}
+        {exitingDoors}
       </li>
     );
   } else {
