@@ -53,12 +53,12 @@
         "boarding": {
           "montmorency": {
             "position": "front",
-            "car": 2,
+            "car": 3,
             "door": 1
           },
           "cote-vertu": {
             "position": "back",
-            "car": -2,
+            "car": -3,
             "door": 1
           }
         }
@@ -112,17 +112,17 @@
           "toDirection": "saint-michel",
           "boarding": {
             "front": {
-              "car": 2,
+              "car": 3,
               "door": 1,
               "position": "front"
             },
             "middle": {
-              "car": 3,
-              "door": 3,
+              "car": 4,
+              "door": 1,
               "position": "middle"
             },
             "back": {
-              "car": -2,
+              "car": -3,
               "door": 1,
               "position": "back"
             }
@@ -136,17 +136,17 @@
           "toDirection": "saint-michel",
           "boarding": {
             "front": {
-              "car": -2,
+              "car": -3,
               "door": 1,
               "position": "back"
             },
             "middle": {
-              "car": 3,
-              "door": 3,
+              "car": 4,
+              "door": 1,
               "position": "middle"
             },
             "back": {
-              "car": 2,
+              "car": 3,
               "door": 1,
               "position": "back"
             }
@@ -822,12 +822,12 @@
         "boarding": {
           "saint-michel": {
             "position": "front",
-            "car": 1,
+            "car": 2,
             "door": 2
           },
           "snowdon": {
             "position": "back",
-            "car": -1,
+            "car": -2,
             "door": 2
           }
         }
