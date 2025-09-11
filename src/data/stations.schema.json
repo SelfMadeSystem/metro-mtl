@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Metro Stations Schema",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/station"
+  },
+  "definitions": {
+    "station": {
+      "type": "object",
+      "required": ["id", "name", "lines"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique identifier for the station"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display name of the station"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "List of line IDs that serve this station"
+        },
+        "exits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/exit"
+          },
+          "description": "List of station exits"
+        },
+        "transfers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transfer"
+          },
+          "description": "List of transfers available at this station"
+        },
+        "stmId": {
+          "type": "string",
+          "description": "STM station ID (if different from 'id')"
+        },
+        "accessible": {
+          "type": "boolean",
+          "description": "Whether the station is wheelchair accessible"
+        },
+        "parking": {
+          "type": "boolean",
+          "description": "Whether the station has parking available"
+        },
+        "pathfinding": {
+          "type": "object",
+          "properties": {
+            "transfers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/pathfindingTransfer"
+              }
+            }
+          },
+          "description": "Pathfinding information for transfers"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exit": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique identifier for the exit"
+        },
+        "line": {
+          "type": "string",
+          "description": "Line ID (for transfer stations)"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Name of the exit (e.g., 'Saint-Joseph - Gilford', 'Main Exit')"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Street address of the exit (e.g., '495, rue Gilford')"
+        },
+        "optimalBoarding": {
+          "type": "string",
+          "description": "Optimal boarding direction station ID (e.g., 'towards Snowdon', 'middle of train')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Additional details about the exit"
+        },
+        "boarding": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "$ref": "#/definitions/boardingInfo"
+            }
+          },
+          "description": "Boarding information for wayfinding"
+        }
+      },
+      "additionalProperties": false
+    },
+    "transfer": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Source line ID"
+        },
+        "to": {
+          "type": "string",
+          "description": "Destination line ID"
+        },
+        "fromDirection": {
+          "type": "string",
+          "description": "Station ID for direction on 'from' line"
+        },
+        "toDirection": {
+          "type": "string",
+          "description": "Station ID for direction on 'to' line"
+        },
+        "optimalBoarding": {
+          "type": "string",
+          "description": "Optimal boarding direction station ID"
+        },
+        "description": {
+          "type": "string",
+          "description": "Additional details about the transfer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "pathfindingTransfer": {
+      "type": "object",
+      "required": ["fromLine", "toLine", "fromDirection", "toDirection"],
+      "properties": {
+        "fromLine": {
+          "type": "string",
+          "description": "Source line ID"
+        },
+        "toLine": {
+          "type": "string",
+          "description": "Destination line ID"
+        },
+        "fromDirection": {
+          "type": "string",
+          "description": "Station ID for direction on source line"
+        },
+        "toDirection": {
+          "type": "string",
+          "description": "Station ID for direction on destination line"
+        },
+        "boarding": {
+          "type": "object",
+          "properties": {
+            "front": {
+              "$ref": "#/definitions/boardingInfo"
+            },
+            "middle": {
+              "$ref": "#/definitions/boardingInfo"
+            },
+            "back": {
+              "$ref": "#/definitions/boardingInfo"
+            }
+          },
+          "required": ["front", "middle", "back"],
+          "description": "Boarding info for the next transfer/exit"
+        },
+        "singleBoarding": {
+          "$ref": "#/definitions/boardingInfo",
+          "description": "If the same boarding applies no matter the next transfer/exit"
+        },
+        "oppositeDoors": {
+          "type": "boolean",
+          "description": "If true, the doors will be on the opposite side of the train"
+        }
+      },
+      "additionalProperties": false
+    },
+    "boardingInfo": {
+      "type": "object",
+      "required": ["position"],
+      "properties": {
+        "position": {
+          "type": "string",
+          "enum": ["front", "middle", "back", "none"],
+          "description": "Position in the car"
+        },
+        "car": {
+          "type": "integer",
+          "minimum": -9,
+          "maximum": 9,
+          "description": "Car number (-9 to 9, where negative indicates from the back)"
+        },
+        "door": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4,
+          "description": "Door number (1-4)"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

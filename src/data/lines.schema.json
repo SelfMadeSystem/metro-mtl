@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Metro Lines Schema",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/line"
+  },
+  "definitions": {
+    "line": {
+      "type": "object",
+      "required": ["id", "code", "name", "color", "textColor", "stations"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique identifier for the line"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2,
+          "description": "Short code like '1', '2', 'A', 'B'"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display name of the line"
+        },
+        "color": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Hex color code for the line"
+        },
+        "textColor": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Hex color code for text on the line"
+        },
+        "stations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "List of station IDs in order along the line"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

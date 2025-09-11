@@ -26,7 +26,7 @@ Perhaps in the future:
 
 ## Contributing
 
-Currently, we are not accepting contributions from the public. If you are interested in contributing, please contact the maintainer.
+Currently, we are only accepting contributions for exit and transfer corridor information. If you want to contribute, please open an issue or a pull request.
 
 ## License
 

@@ -1,0 +1,12 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["src/data/stations.json"],
+      "url": "./src/data/stations.schema.json"
+    },
+    {
+      "fileMatch": ["src/data/lines.json"],
+      "url": "./src/data/lines.schema.json"
+    }
+  ]
+}
