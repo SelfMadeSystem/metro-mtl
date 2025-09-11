@@ -3,6 +3,7 @@ import { MetroPathFinder, type MetroPathStep } from "../pathFinding";
 import type { Line, StationWithLines } from "../content.config";
 import { normalizeString } from "../utils";
 import LinePill from "./LinePill";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function PathFinding({
   stations,
@@ -20,6 +21,7 @@ export default function PathFinding({
   const [endSearch, setEndSearch] = useState("");
   const [showStartDropdown, setShowStartDropdown] = useState(false);
   const [showEndDropdown, setShowEndDropdown] = useState(false);
+  const { favoriteStationIds } = useFavorites();
 
   // Handle URL query parameters on component mount
   useEffect(() => {
@@ -172,6 +174,7 @@ export default function PathFinding({
       <div className="mb-4 flex flex-wrap gap-4">
         {/* Start Station Selector */}
         <StationSelector
+          favoriteStationIds={favoriteStationIds}
           label="Start Station"
           selectedStation={selectedStartStation}
           search={startSearch}
@@ -205,6 +208,7 @@ export default function PathFinding({
 
         {/* End Station Selector */}
         <StationSelector
+          favoriteStationIds={favoriteStationIds}
           label="End Station"
           selectedStation={selectedEndStation}
           search={endSearch}
@@ -254,6 +258,7 @@ export default function PathFinding({
 }
 
 function StationSelector({
+  favoriteStationIds,
   label,
   selectedStation,
   search,
@@ -264,6 +269,7 @@ function StationSelector({
   filteredStations,
   handleSelect,
 }: {
+  favoriteStationIds: string[];
   label: string;
   selectedStation: { id: string; name: string } | undefined;
   search: string;
@@ -274,6 +280,16 @@ function StationSelector({
   filteredStations: { id: string; name: string; searchText: string }[];
   handleSelect: (stationId: string) => void;
 }) {
+  // Put favorite stations at the top
+  const sortedStations = useMemo(() => {
+    const favorites = filteredStations.filter((s) =>
+      favoriteStationIds.includes(s.id)
+    );
+    const nonFavorites = filteredStations.filter(
+      (s) => !favoriteStationIds.includes(s.id)
+    );
+    return [...favorites, ...nonFavorites];
+  }, [filteredStations, favoriteStationIds]);
   return (
     <div className="relative flex-1 min-w-64">
       <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-200">
@@ -294,15 +310,26 @@ function StationSelector({
         />
         {showDropdown && (
           <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-b max-h-48 overflow-y-auto shadow-lg dark:bg-stm-black dark:border-white">
-            {filteredStations.length > 0 ? (
-              filteredStations.map((station) => (
+            {sortedStations.length > 0 ? (
+              sortedStations.map((station) => (
                 <button
                   key={station.id}
                   onClick={() => handleSelect(station.id)}
-                  className="cursor-pointer w-full text-left p-2 hover:bg-blue-50 focus:bg-blue-50 border-none dark:hover:bg-stm-dark/30 dark:focus:bg-stm-black/70"
+                  className="cursor-pointer w-full flex justify-between text-left p-2 hover:bg-blue-50 focus:bg-blue-50 border-none dark:hover:bg-stm-dark/30 dark:focus:bg-stm-black/70"
                 >
                   <div className="font-medium">{station.name}</div>
-                  <div className="text-sm text-gray-500">{station.id}</div>
+                  {favoriteStationIds.includes(station.id) && (
+                    <div className="text-xs text-yellow-500">
+                      <svg
+                        className="inline w-4 h-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
+                      </svg>
+                    </div>
+                  )}
                 </button>
               ))
             ) : (
@@ -327,7 +354,11 @@ function StepComponent({ step }: { step: MetroPathStep }) {
   let exitingInfo: React.ReactNode = null;
   let exitingDoors: React.ReactNode = null;
 
-  if ("boarding" in step && step.boarding && step.boarding.position !== "none") {
+  if (
+    "boarding" in step &&
+    step.boarding &&
+    step.boarding.position !== "none"
+  ) {
     if (step.boarding.car !== undefined && step.boarding.door === undefined) {
       boardingInfo = (
         <>
