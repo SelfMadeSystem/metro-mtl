@@ -909,7 +909,26 @@
   {
     "id": "edouard-montpetit",
     "name": "Édouard-Montpetit",
-    "lines": ["blue"]
+    "lines": ["blue"],
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "saint-michel",
+        "boarding": {
+          "saint-michel": {
+            "position": "front",
+            "car": 3,
+            "door": 3
+          },
+          "snowdon": {
+            "position": "back",
+            "car": 4,
+            "door": 1
+          }
+        }
+      }
+    ]
   },
   {
     "id": "outremont",

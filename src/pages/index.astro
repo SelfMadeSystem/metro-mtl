@@ -28,6 +28,18 @@ const stationsByLine = lines.reduce(
     <h1 class="text-3xl font-bold mb-6 text-center pt-8">
       Metro Montréal Stations
     </h1>
+    <div class="flex flex-wrap justify-center gap-8">
+      <a
+        href="/svgs/planmetropolitain.svg"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >View Metropolitan Map</a
+      >
+      <a
+        href="/svgs/a-plan-metro-noir.svg"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >View Metro Map</a
+      >
+    </div>
     <StationSearch client:load {stations} {lines} {lineById} {stationsByLine} />
   </div>
 </Layout>
