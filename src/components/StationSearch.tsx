@@ -40,7 +40,7 @@ export default function StationSearch({
       />
       {query !== "" &&
         (filteredStations.length > 0 ? (
-          <div className="flex flex-wrap justify-between mx-8 gap-4">
+          <div className="flex flex-wrap justify-between mx-8 gap-4 mt-8">
             <AnimatePresence mode="popLayout">
               {filteredStations.map((station) => (
                 <motion.div
@@ -118,24 +118,26 @@ export default function StationSearch({
         </AnimatePresence>
       )}
       {query === "" && (
-        <motion.div
-          className="flex justify-between flex-wrap mx-8 gap-8 mt-4"
-          layout
-          transition={{
-            layout: { duration: 0, ease: "circInOut" },
-          }}
-        >
-          {lines.map((line) => (
-            <LineList
-              key={line.id}
-              line={line}
-              lineById={lineById}
-              stationsByLine={stationsByLine}
-              isFavorite={isFavorite}
-              onToggleFavorite={toggleFavorite}
-            />
-          ))}
-        </motion.div>
+        <div className="overflow-x-auto w-full mt-8 px-8 -scale-y-100">
+          <motion.div
+            className="flex justify-between gap-8 my-4 -scale-y-100"
+            layout
+            transition={{
+              layout: { duration: 0, ease: "circInOut" },
+            }}
+          >
+            {lines.map((line) => (
+              <LineList
+                key={line.id}
+                line={line}
+                lineById={lineById}
+                stationsByLine={stationsByLine}
+                isFavorite={isFavorite}
+                onToggleFavorite={toggleFavorite}
+              />
+            ))}
+          </motion.div>
+        </div>
       )}
     </div>
   );
