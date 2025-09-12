@@ -366,7 +366,163 @@
         "optimalBoarding": "middle",
         "description": "Must go through green platform to transfer."
       }
-    ]
+    ],
+    "pathfinding": {
+      "transfers": [
+        {
+          "fromLine": "green",
+          "toLine": "orange",
+          "fromDirection": "honore-beaugrand",
+          "toDirection": "montmorency",
+          "singleBoarding": {
+            "position": "back",
+            "car": -2,
+            "door": 3
+          }
+        },
+        {
+          "fromLine": "green",
+          "toLine": "orange",
+          "fromDirection": "honore-beaugrand",
+          "toDirection": "cote-vertu",
+          "singleBoarding": {
+            "position": "front"
+          }
+        },
+        {
+          "fromLine": "green",
+          "toLine": "orange",
+          "fromDirection": "angrignon",
+          "toDirection": "montmorency",
+          "singleBoarding": {
+            "position": "back",
+            "car": 3,
+            "door": 1
+          }
+        },
+        {
+          "fromLine": "green",
+          "toLine": "orange",
+          "fromDirection": "angrignon",
+          "toDirection": "cote-vertu",
+          "singleBoarding": {
+            "position": "back"
+          }
+        },
+        {
+          "fromLine": "green",
+          "toLine": "yellow",
+          "fromDirection": "honore-beaugrand",
+          "toDirection": "longueuil",
+          "singleBoarding": {
+            "position": "back",
+            "car": -2,
+            "door": 1
+          }
+        },
+        {
+          "fromLine": "green",
+          "toLine": "yellow",
+          "fromDirection": "angrignon",
+          "toDirection": "longueuil",
+          "singleBoarding": {
+            "position": "front",
+            "car": 2,
+            "door": 1
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "green",
+          "fromDirection": "montmorency",
+          "toDirection": "honore-beaugrand",
+          "singleBoarding": {
+            "position": "front"
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "green",
+          "fromDirection": "cote-vertu",
+          "toDirection": "honore-beaugrand",
+          "singleBoarding": {
+            "position": "back"
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "green",
+          "fromDirection": "montmorency",
+          "toDirection": "angrignon",
+          "singleBoarding": {
+            "position": "back"
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "green",
+          "fromDirection": "cote-vertu",
+          "toDirection": "angrignon",
+          "singleBoarding": {
+            "position": "front"
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "yellow",
+          "fromDirection": "montmorency",
+          "toDirection": "longueuil",
+          "singleBoarding": {
+            "position": "front"
+          }
+        },
+        {
+          "fromLine": "orange",
+          "toLine": "yellow",
+          "fromDirection": "cote-vertu",
+          "toDirection": "longueuil",
+          "singleBoarding": {
+            "position": "back"
+          }
+        },
+        {
+          "fromLine": "yellow",
+          "toLine": "green",
+          "fromDirection": "berri-uqam",
+          "toDirection": "honore-beaugrand",
+          "singleBoarding": {
+            "position": "middle"
+          }
+        },
+        {
+          "fromLine": "yellow",
+          "toLine": "green",
+          "fromDirection": "berri-uqam",
+          "toDirection": "angrignon",
+          "singleBoarding": {
+            "position": "middle"
+          }
+        },
+        {
+          "fromLine": "yellow",
+          "toLine": "orange",
+          "fromDirection": "berri-uqam",
+          "toDirection": "montmorency",
+          "singleBoarding": {
+            "position": "middle"
+          }
+        },
+        {
+          "fromLine": "yellow",
+          "toLine": "orange",
+          "fromDirection": "berri-uqam",
+          "toDirection": "cote-vertu",
+          "singleBoarding": {
+            "position": "middle"
+          }
+        }
+      ]
+    }
   },
   {
     "id": "sherbrooke",
