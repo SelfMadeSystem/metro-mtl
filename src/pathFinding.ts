@@ -1,6 +1,8 @@
 import Graph from "graphology";
-import shortestPath from "graphology-shortest-path/unweighted";
+import shortestPath from "graphology-shortest-path";
 import type { Line, StationWithLines } from "./content.config";
+
+const S = "\0"; // splitter
 
 type BoardingInfo = {
   position: "front" | "middle" | "back" | "none";
@@ -46,7 +48,12 @@ export type PartialMetroPathStep =
   | Omit<MetroPathExitStep, "exiting">;
 
 export class MetroPathFinder {
-  private graph: Graph;
+  private graph: Graph<
+    StationWithLines,
+    {
+      weight?: number;
+    }
+  >;
   private stationsById: Record<string, StationWithLines> = {};
 
   constructor(private lines: Line[], private stations: StationWithLines[]) {
@@ -65,19 +72,80 @@ export class MetroPathFinder {
         const stationA = stations[i];
         const stationB = stations[i + 1];
 
-        if (!this.graph.hasNode(stationA.id)) {
-          this.graph.addNode(stationA.id, this.stationsById[stationA.id]);
+        const aID = stationA.id + S + line.id;
+        const bID = stationB.id + S + line.id;
+
+        if (!this.graph.hasNode(aID)) {
+          this.graph.addNode(aID, this.stationsById[stationA.id]);
         }
-        if (!this.graph.hasNode(stationB.id)) {
-          this.graph.addNode(stationB.id, this.stationsById[stationB.id]);
+        if (!this.graph.hasNode(bID)) {
+          this.graph.addNode(bID, this.stationsById[stationB.id]);
         }
 
-        if (!this.graph.hasEdge(stationA.id, stationB.id)) {
-          this.graph.addEdge(stationA.id, stationB.id);
+        if (!this.graph.hasEdge(aID, bID)) {
+          this.graph.addEdge(aID, bID);
         }
 
-        if (!this.graph.hasEdge(stationB.id, stationA.id)) {
-          this.graph.addEdge(stationB.id, stationA.id);
+        if (!this.graph.hasEdge(bID, aID)) {
+          this.graph.addEdge(bID, aID);
+        }
+      }
+    }
+
+    // Connect all stations to themselves
+    for (const station of this.stations) {
+      for (let i = 0; i < station.lines.length; i++) {
+        const line = station.lines[i];
+        const id = station.id + S + line.id;
+        const sid = station.id;
+
+        if (!this.graph.hasNode(id)) {
+          this.graph.addNode(id, station);
+          console.warn("Adding missing node", id);
+        }
+
+        if (!this.graph.hasNode(sid)) {
+          this.graph.addNode(sid, station);
+        }
+
+        if (!this.graph.hasEdge(id, sid)) {
+          this.graph.addEdge(id, sid);
+        }
+
+        if (!this.graph.hasEdge(sid, id)) {
+          this.graph.addEdge(sid, id);
+        }
+      }
+      if (station.lines.length < 2) continue;
+
+      for (let i = 0; i < station.lines.length; i++) {
+        for (let j = i + 1; j < station.lines.length; j++) {
+          const lineA = station.lines[i];
+          const lineB = station.lines[j];
+
+          const aID = station.id + S + lineA.id;
+          const bID = station.id + S + lineB.id;
+
+          if (!this.graph.hasNode(aID)) {
+            this.graph.addNode(aID, station);
+            console.warn("Adding missing node", aID);
+          }
+          if (!this.graph.hasNode(bID)) {
+            this.graph.addNode(bID, station);
+            console.warn("Adding missing node", bID);
+          }
+
+          if (!this.graph.hasEdge(aID, bID)) {
+            this.graph.addEdge(aID, bID, {
+              weight: 100, // High weight to discourage transfers unless necessary
+            });
+          }
+
+          if (!this.graph.hasEdge(bID, aID)) {
+            this.graph.addEdge(bID, aID, {
+              weight: 100, // High weight to discourage transfers unless necessary
+            });
+          }
         }
       }
     }
@@ -91,12 +159,30 @@ export class MetroPathFinder {
       return null;
     }
 
-    const path = shortestPath.bidirectional(this.graph, startId, endId);
+    const path = shortestPath.astar.bidirectional(
+      this.graph,
+      startId,
+      endId,
+      "weight"
+    );
     if (!path) {
       return null;
     }
 
-    return path.map((stationId) => this.stationsById[stationId]);
+    // Remove first stop if it's the same as the second
+    if (path.length > 1 && path[0].split(S)[0] === path[1].split(S)[0]) {
+      path.shift();
+    }
+
+    // Remove last stop if it's the same as the second last
+    if (
+      path.length > 1 &&
+      path[path.length - 1].split(S)[0] === path[path.length - 2].split(S)[0]
+    ) {
+      path.pop();
+    }
+
+    return path.map((stationId) => this.stationsById[stationId.split(S)[0]]);
   }
 
   public getTowardsStation(
@@ -308,8 +394,6 @@ export class MetroPathFinder {
             step.exiting = { position: "none" };
             break;
           }
-
-          console.log(step.station.pathfinding.transfers, step);
 
           const transfer = step.station.pathfinding.transfers.find((t) => {
             return (

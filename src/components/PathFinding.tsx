@@ -46,10 +46,10 @@ export default function PathFinding({
       // If both stations are valid, find the path
       if (startStationExists && endStationExists) {
         const result = pathFinder.findShortestPath(startParam, endParam);
+        console.log("Result:", result);
         setPath(result);
         if (result) {
           const pathSteps = pathFinder.pathToSteps(result);
-          console.log("Path Steps:", pathSteps);
           setSteps(pathFinder.addBoardingInfo(pathSteps));
         } else {
           setSteps(null);
@@ -95,10 +95,10 @@ export default function PathFinding({
     }
 
     const result = pathFinder.findShortestPath(start, end);
+    console.log("Result:", result);
     setPath(result);
     if (result) {
       const pathSteps = pathFinder.pathToSteps(result);
-      console.log("Path Steps:", pathSteps);
       setSteps(pathFinder.addBoardingInfo(pathSteps));
     } else {
       setSteps(null);
