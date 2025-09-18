@@ -8,6 +8,7 @@ import LinePill from "../../../components/LinePill";
 import type { InferEntrySchema } from "astro:content";
 import StationMap from "../../../components/StationMap";
 import TransferSelector from "../../../components/TransferSelector";
+import BackNavigation from "../../../components/BackNavigation";
 
 interface Props {
   station: Station;
@@ -93,28 +94,7 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
     <!-- Header Section -->
     <header class="bg-white shadow-lg border-b dark:bg-stm-black">
       <!-- Navigation -->
-      <nav class="border-b shadow-md dark:bg-stm-dark">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <a
-            href="/"
-            class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200 dark:text-blue-400 dark:hover:text-blue-600"
-          >
-            <svg
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Back to Stations
-          </a>
-        </div>
-      </nav>
+      <BackNavigation />
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="flex items-center justify-between">

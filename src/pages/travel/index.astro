@@ -1,4 +1,5 @@
 ---
+import BackNavigation from "../../components/BackNavigation";
 import PathFinding from "../../components/PathFinding";
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
@@ -19,6 +20,7 @@ const stations = stationsData.map((station) => ({
   title="Find Path Between Stations"
   description="Find the best path between two Montreal Metro stations"
 >
+  <BackNavigation />
   <div class="min-h-screen bg-map">
     <PathFinding stations={stations} lines={lines} client:load />
   </div>
