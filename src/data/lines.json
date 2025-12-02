@@ -103,5 +103,34 @@
       "d-iberville",
       "saint-michel"
     ]
+  },
+  {
+    "id": "a1-a4",
+    "name": "REM Deux-Montagnes",
+    "code": "A4",
+    "style": "split",
+    "color": "#84bd00",
+    "textColor": "#FFFFFF",
+    "stations": [
+      "brossard",
+      "du-quartier",
+      "panama",
+      "ile-des-soeurs",
+      "gare-centrale",
+      "mcgill",
+      "edouard-montpetit",
+      "canora",
+      "ville-de-mont-royal",
+      "cote-de-liesse",
+      "montpellier",
+      "du-ruisseau",
+      "bois-franc",
+      "sunnybrooke",
+      "pierrefonds-roxboro",
+      "ile-bigras",
+      "sainte-dorothee",
+      "grand-moulin",
+      "deux-montagnes"
+    ]
   }
 ]

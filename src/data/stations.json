@@ -816,7 +816,7 @@
   {
     "id": "mcgill",
     "name": "McGill",
-    "lines": ["green"],
+    "lines": ["green", "a1-a4"],
     "exits": [
       {
         "id": "main",
@@ -1065,7 +1065,7 @@
   {
     "id": "edouard-montpetit",
     "name": "Édouard-Montpetit",
-    "lines": ["blue"],
+    "lines": ["blue", "a1-a4"],
     "exits": [
       {
         "id": "main",
@@ -1122,5 +1122,124 @@
     "id": "saint-michel",
     "name": "Saint-Michel",
     "lines": ["blue"]
+  },
+  {
+    "id": "brossard",
+    "name": "Brossard",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "du-quartier",
+    "name": "Du Quartier",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "panama",
+    "name": "Panama",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "ile-des-soeurs",
+    "name": "Île-des-Sœurs",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "gare-centrale",
+    "name": "Gare Centrale",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "canora",
+    "name": "Canora",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "ville-de-mont-royal",
+    "name": "Ville-de-Mont-Royal",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "cote-de-liesse",
+    "name": "Côte-de-Liesse",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "montpellier",
+    "name": "Montpellier",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "du-ruisseau",
+    "name": "Du Ruisseau",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "bois-franc",
+    "name": "Bois-Franc",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "sunnybrooke",
+    "name": "Sunnybrooke",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "pierrefonds-roxboro",
+    "name": "Pierrefonds-Roxboro",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "ile-bigras",
+    "name": "Île-Bigras",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "sainte-dorothee",
+    "name": "Sainte-Dorothée",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "grand-moulin",
+    "name": "Grand-Moulin",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "deux-montagnes",
+    "name": "Deux-Montagnes",
+    "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
   }
 ]

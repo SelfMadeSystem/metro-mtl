@@ -21,10 +21,21 @@
           "maxLength": 2,
           "description": "Short code like '1', '2', 'A', 'B'"
         },
+        "station-code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2,
+          "description": "Code to use when displaying stations. Overrides 'code' if present"
+        },
         "name": {
           "type": "string",
           "minLength": 1,
           "description": "Display name of the line"
+        },
+        "style": {
+          "type": "string",
+          "enum": ["solid", "split"],
+          "description": "Style of the line for map rendering"
         },
         "color": {
           "type": "string",
