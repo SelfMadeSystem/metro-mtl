@@ -2,6 +2,7 @@ import clsx from "clsx";
 import type { Line, Station } from "../content.config";
 import LineBadge from "./LineBadge";
 import { useEffect, useState } from "react";
+import { LineBadges } from "./LineBadges";
 
 export default function StationButton({
   station,
@@ -43,8 +44,9 @@ export default function StationButton({
         {line && (
           <div
             className={clsx(
-              "w-4 h-4 absolute -left-4 top-1/2 -translate-1/2 bg-white rounded-full mx-auto transition-all",
-              prevIsLast && "w-6 h-6 top-full"
+              "w-4 h-4 absolute -left-4 top-1/2 -translate-1/2 rounded-full mx-auto transition-all",
+              prevIsLast && "w-6 h-6 top-full",
+              line.style === "split" ? "bg-white dark:bg-stm-black" : "bg-white"
             )}
           />
         )}
@@ -55,11 +57,10 @@ export default function StationButton({
           )}
         >
           {station.name}
-          {station.lines.map(({ id }) => {
-            if (id === line?.id) return null; // Don't show the current line badge
-            const l = lineById[id];
-            return l ? <LineBadge key={id} line={l} /> : null;
-          })}
+          <LineBadges
+            lines={station.lines.map(({ id }) => lineById[id])}
+            omit={line}
+          />
         </h3>
         <button
           onClick={(e) => {

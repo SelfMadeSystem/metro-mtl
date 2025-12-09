@@ -21,7 +21,7 @@
           "maxLength": 2,
           "description": "Short code like '1', '2', 'A', 'B'"
         },
-        "station-code": {
+        "stationCode": {
           "type": "string",
           "minLength": 1,
           "maxLength": 2,

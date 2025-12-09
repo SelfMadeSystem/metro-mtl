@@ -3,6 +3,22 @@ import type { Line, Station } from "../content.config";
 import LineBadge from "./LineBadge";
 import StationButton from "./StationButton";
 import { motion } from "framer-motion";
+import clsx from "clsx";
+
+function lineStyle(line: Line): React.CSSProperties {
+  switch (line.style) {
+    case "split": {
+      return {
+        border: `${32 * 0.4}px solid ${line.color}`,
+      };
+    }
+    default: {
+      return {
+        backgroundColor: line.color,
+      };
+    }
+  }
+}
 
 export default function LineList({
   line,
@@ -26,15 +42,18 @@ export default function LineList({
   return (
     <div className="flex-1 relative isolate h-fit">
       <div
-        className="w-8 absolute left-0 top-4 -bottom-4 -z-10 rounded-b-full"
-        style={{ background: line.color }}
+        className={clsx(
+          "w-8 absolute left-0 top-0 -bottom-4 -z-10 rounded-full",
+          line.style === "split" ? "bg-white dark:bg-stm-black" : ""
+        )}
+        style={lineStyle(line)}
       />
       <h2
         className="text-2xl font-bold mb-4 flex gap-2 text-nowrap items-center cursor-pointer select-none"
         style={{ color: line.color }}
         onClick={() => setReversed(!reversed)}
       >
-        <LineBadge line={line} />
+        <LineBadge line={line} station={false} />
         {line.name}
         <svg
           width={16}

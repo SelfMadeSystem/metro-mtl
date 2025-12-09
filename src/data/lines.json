@@ -106,8 +106,9 @@
   },
   {
     "id": "a1-a4",
-    "name": "REM Deux-Montagnes",
+    "name": "Deux-Montagnes",
     "code": "A4",
+    "stationCode": "A",
     "style": "split",
     "color": "#84bd00",
     "textColor": "#FFFFFF",

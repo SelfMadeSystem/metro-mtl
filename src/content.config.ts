@@ -74,8 +74,10 @@ export type StationWithLines = Omit<Station, "lines"> & { lines: Line[] };
 // Define a schema for metro lines
 const lineSchema = z.object({
   id: z.string().min(1),
-  code: z.string().min(1).max(2), // Short code like "1", "2", "A", "B"
+  code: z.string().min(1).max(2), // Short code like "1", "2", "A1", "A4"
+  stationCode: z.string().min(1).max(2).optional(), // Short code like "1", "2", "A"
   name: z.string().min(1),
+  style: z.string().min(1).optional(),
   color: z.string().min(1), // Hex color code
   textColor: z.string().min(1), // Hex color code for text
   stations: z.array(reference("stations")).min(1), // List of station IDs
