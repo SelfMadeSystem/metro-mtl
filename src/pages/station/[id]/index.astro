@@ -9,32 +9,58 @@ import type { InferEntrySchema } from "astro:content";
 import StationMap from "../../../components/StationMap";
 import TransferSelector from "../../../components/TransferSelector";
 import BackNavigation from "../../../components/BackNavigation";
+import { fileExists } from "../../../fsUtils";
+import path from "path";
 
 interface Props {
   station: Station;
+  autourExists: boolean;
+  networkExists: boolean;
+  quartierExists: boolean;
 }
 
 export async function getStaticPaths() {
   const stations = await getCollection("stations");
-  return stations.map((station) => ({
-    params: { id: station.id },
-    props: { station: station.data },
-  }));
+  const svgDir = path.resolve("public/svgs");
+
+  return Promise.all(
+    stations.map(async (station) => {
+      const autourExists = await fileExists(svgDir, `${station.id}_autour.svg`);
+      const networkExists = await fileExists(
+        svgDir,
+        `${station.id}_network.svg`,
+      );
+      const quartierExists = await fileExists(
+        svgDir,
+        `${station.id}_quartier.svg`,
+      );
+
+      return {
+        params: { id: station.id },
+        props: {
+          station: station.data,
+          autourExists,
+          networkExists,
+          quartierExists,
+        },
+      };
+    }),
+  );
 }
 
-const { station } = Astro.props;
+const { station, autourExists, networkExists, quartierExists } = Astro.props;
 
 async function nameOrId<T extends "stations" | "lines">(
   ref: ReferenceDataEntry<T>,
-  cb?: (data: InferEntrySchema<T>) => string
+  cb?: (data: InferEntrySchema<T>) => string,
 ): Promise<string>;
 async function nameOrId<T extends "stations" | "lines">(
   ref: ReferenceDataEntry<T> | undefined,
-  cb?: (data: InferEntrySchema<T>) => string
+  cb?: (data: InferEntrySchema<T>) => string,
 ): Promise<string | null>;
 async function nameOrId<T extends "stations" | "lines">(
   ref: ReferenceDataEntry<T> | undefined,
-  cb?: (data: InferEntrySchema<T>) => string
+  cb?: (data: InferEntrySchema<T>) => string,
 ) {
   if (!ref) return null;
   const entry = await getEntry(ref).catch(() => null);
@@ -50,18 +76,18 @@ const transfers = await Promise.all(
       to: (await getEntry(transfer.to)).data,
       fromDirection: await nameOrId<"stations">(
         transfer.fromDirection,
-        (name) => `direction ${name.name}`
+        (name) => `direction ${name.name}`,
       ),
       toDirection: await nameOrId(
         transfer.toDirection,
-        (name) => `direction ${name.name}`
+        (name) => `direction ${name.name}`,
       ),
       optimalBoarding: await nameOrId(
         transfer.optimalBoarding,
-        (name) => `direction ${name.name}`
+        (name) => `direction ${name.name}`,
       ),
     };
-  })
+  }),
 );
 
 const exits = await Promise.all(
@@ -70,10 +96,10 @@ const exits = await Promise.all(
       ...exit,
       optimalBoarding: await nameOrId(
         exit.optimalBoarding,
-        ({ name }) => `direction ${name}`
+        ({ name }) => `direction ${name}`,
       ),
     };
-  })
+  }),
 );
 
 const lines = await getEntries(station.lines);
@@ -83,7 +109,24 @@ const autour = `/svgs/${station.id}_autour.svg`;
 const network = `/svgs/${station.id}_network.svg`;
 const quartier = `/svgs/${station.id}_quartier.svg`;
 
-const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent(station.stmId ?? station.id)}`;
+let stmUrl = null;
+let remUrl = null;
+
+if (!station.stmUrl && !station.remUrl) {
+  if (station.lines.some((line) => line.id.startsWith("a"))) {
+    remUrl = `https://rem.info/en/travelling/stations/${encodeURIComponent(
+      station.id,
+    )}`;
+  }
+  if (station.lines.some((line) => !line.id.startsWith("a"))) {
+    stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent(
+      station.id,
+    )}`;
+  }
+} else {
+  if (station.stmUrl) stmUrl = station.stmUrl;
+  if (station.remUrl) remUrl = station.remUrl;
+}
 ---
 
 <Layout
@@ -176,35 +219,65 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
                 Travel to
               </a>
             </div>
-            <!-- STM Link -->
-            <a
-              href={stmUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-            >
-              <svg
-                class="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                ></path>
-              </svg>
-              View on STM.info
-            </a>
+            <div class="flex flex-row gap-4">
+              {
+                stmUrl && (
+                  <a
+                    href={stmUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                    View on STM.info
+                  </a>
+                )
+              }
+              {
+                remUrl && (
+                  <a
+                    href={remUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                    View on REM.info
+                  </a>
+                )
+              }
+            </div>
           </div>
         </div>
       </div>
     </header>
 
     <!-- Content Section -->
-    <div class="bg-map w-full flex-grow">
+    <div class="bg-map w-full grow">
       <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Transfers -->
         {
@@ -303,95 +376,105 @@ const stmUrl = `https://www.stm.info/en/info/networks/metro/${encodeURIComponent
         </div>
         <!-- Maps Section -->
         <div class="flex flex-col gap-8">
-          <!-- Network Map -->
-          <StationMap
-            map={network}
-            alt={`Network map at ${station.name} station`}
-            title="To satisfy the TypeScript compiler"
-            description="The actual slots are being passed, not these props"
-            client:load
-          >
-            <Fragment slot="title">
-              <svg
-                class="w-6 h-6 text-green-600 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <!-- Network Map -->{
+            networkExists && (
+              <StationMap
+                map={network}
+                alt={`Network map at ${station.name} station`}
+                title="To satisfy the TypeScript compiler"
+                description="The actual slots are being passed, not these props"
+                client:load
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                ></path>
-              </svg>
-              Network Connection
-            </Fragment>
-            <Fragment slot="description">
-              Metro network view from {station.name}
-            </Fragment>
-          </StationMap>
-          <!-- Around Station -->
-          <StationMap
-            map={autour}
-            alt={`Map around ${station.name} station`}
-            title="To satisfy the TypeScript compiler"
-            description="The actual slots are being passed, not these props"
-            client:load
-          >
-            <Fragment slot="title">
-              <svg
-                class="w-6 h-6 text-blue-600 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                <Fragment slot="title">
+                  <svg
+                    class="w-6 h-6 text-green-600 mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                    />
+                  </svg>
+                  Network Connection
+                </Fragment>
+                <Fragment slot="description">
+                  Metro network view from {station.name}
+                </Fragment>
+              </StationMap>
+            )
+          }
+          <!-- Around Station -->{
+            autourExists && (
+              <StationMap
+                map={autour}
+                alt={`Map around ${station.name} station`}
+                title="To satisfy the TypeScript compiler"
+                description="The actual slots are being passed, not these props"
+                client:load
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                ></path>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              Around the Station
-            </Fragment>
-            <Fragment slot="description">
-              Points of interest and amenities near {station.name}
-            </Fragment>
-          </StationMap>
-          <!-- Neighborhood Map -->
-          <StationMap
-            map={quartier}
-            alt={`Neighborhood map at ${station.name} station`}
-            title="To satisfy the TypeScript compiler"
-            description="The actual slots are being passed, not these props"
-            client:load
-          >
-            <Fragment slot="title">
-              <svg
-                class="w-6 h-6 text-purple-600 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                <Fragment slot="title">
+                  <svg
+                    class="w-6 h-6 text-blue-600 mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  Around the Station
+                </Fragment>
+                <Fragment slot="description">
+                  Points of interest and amenities near {station.name}
+                </Fragment>
+              </StationMap>
+            )
+          }
+          <!-- Neighborhood Map -->{
+            quartierExists && (
+              <StationMap
+                map={quartier}
+                alt={`Neighborhood map at ${station.name} station`}
+                title="To satisfy the TypeScript compiler"
+                description="The actual slots are being passed, not these props"
+                client:load
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                ></path>
-              </svg>
-              Neighborhood
-            </Fragment>
-            <Fragment slot="description">
-              Local area and district around {station.name}
-            </Fragment>
-          </StationMap>
+                <Fragment slot="title">
+                  <svg
+                    class="w-6 h-6 text-purple-600 mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                  Neighborhood
+                </Fragment>
+                <Fragment slot="description">
+                  Local area and district around {station.name}
+                </Fragment>
+              </StationMap>
+            )
+          }
         </div>
       </main>
     </div>

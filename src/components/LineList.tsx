@@ -23,28 +23,29 @@ function lineStyle(line: Line): React.CSSProperties {
 export default function LineList({
   line,
   lineById,
-  stationsByLine,
+  stationById,
   isFavorite,
   onToggleFavorite,
 }: {
   line: Line;
   lineById: Record<string, Line>;
-  stationsByLine: Record<string, Station[]>;
+  stationById: Record<string, Station>;
   isFavorite: (stationId: string) => boolean;
   onToggleFavorite: (stationId: string) => void;
 }) {
   const [reversed, setReversed] = useState(false);
 
-  const stations = reversed
-    ? stationsByLine[line.id].toReversed()
-    : stationsByLine[line.id];
+  const stations = line.stations
+    .map(({ id }) => stationById[id])
+    .filter(Boolean);
+  if (reversed) stations.reverse();
 
   return (
     <div className="flex-1 relative isolate h-fit">
       <div
         className={clsx(
           "w-8 absolute left-0 top-0 -bottom-4 -z-10 rounded-full",
-          line.style === "split" ? "bg-white dark:bg-stm-black" : ""
+          line.style === "split" ? "bg-white dark:bg-stm-black" : "",
         )}
         style={lineStyle(line)}
       />

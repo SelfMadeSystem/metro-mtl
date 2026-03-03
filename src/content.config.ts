@@ -58,7 +58,9 @@ const stationSchema = z.object({
   lines: reference("lines").array().min(1), // List of line IDs
   exits: z.array(exitSchema).optional(),
   transfers: z.array(transferSchema).optional(),
-  stmId: z.string().optional(), // STM station ID (if different from 'id')
+  stmUrl: z.string().optional(), // STM station URL (if different from 'id')
+  remUrl: z.string().optional(), // REM station URL (if applicable)
+  // might add exoUrl in the future if we want to include commuter trains
   accessible: z.boolean().optional(),
   parking: z.boolean().optional(),
   pathfinding: z

@@ -42,9 +42,13 @@
           },
           "description": "List of transfers available at this station"
         },
-        "stmId": {
+        "stmUrl": {
           "type": "string",
-          "description": "STM station ID (if different from 'id')"
+          "description": "STM station URL (if different from 'id')"
+        },
+        "remUrl": {
+          "type": "string",
+          "description": "REM station URL (if applicable)"
         },
         "accessible": {
           "type": "boolean",

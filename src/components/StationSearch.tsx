@@ -10,12 +10,12 @@ export default function StationSearch({
   lines,
   lineById,
   stations,
-  stationsByLine,
+  stationById,
 }: {
   lines: Line[];
   lineById: Record<string, Line>;
   stations: Station[];
-  stationsByLine: Record<string, Station[]>;
+  stationById: Record<string, Station>;
 }) {
   const [query, setQuery] = useState("");
   const { isFavorite, toggleFavorite, getFavoriteStations } = useFavorites();
@@ -131,7 +131,7 @@ export default function StationSearch({
                 key={line.id}
                 line={line}
                 lineById={lineById}
-                stationsByLine={stationsByLine}
+                stationById={stationById}
                 isFavorite={isFavorite}
                 onToggleFavorite={toggleFavorite}
               />

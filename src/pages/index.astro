@@ -2,25 +2,11 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import StationSearch from "../components/StationSearch";
-import type { Station } from "../content.config";
 
 const stations = (await getCollection("stations")).map((s) => s.data);
 const lines = (await getCollection("lines")).map((s) => s.data);
 const lineById = Object.fromEntries(lines.map((line) => [line.id, line]));
-const stationsByLine = lines.reduce(
-  (acc, line) => {
-    // Sorted by index in line.data.stations
-    acc[line.id] = stations
-      .filter((station) => station.lines.some(({ id }) => id === line.id))
-      .sort(
-        (a, b) =>
-          line.stations.findIndex((s) => s.id === a.id) -
-          line.stations.findIndex((s) => s.id === b.id)
-      );
-    return acc;
-  },
-  {} as Record<string, Station[]>
-);
+const stationById = Object.fromEntries(stations.map((station) => [station.id, station]));
 ---
 
 <Layout>
@@ -40,6 +26,6 @@ const stationsByLine = lines.reduce(
         >View Metro Map</a
       >
     </div>
-    <StationSearch client:load {stations} {lines} {lineById} {stationsByLine} />
+    <StationSearch client:load {stations} {lines} {lineById} {stationById} />
   </div>
 </Layout>

@@ -278,14 +278,15 @@
   {
     "id": "bonaventure",
     "name": "Bonaventure",
-    "lines": ["orange"],
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/bonaventure",
+    "lines": ["orange", "a1-a4"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "square-victoria",
     "name": "Square-Victoria-OACI",
-    "stmId": "square-victoria-oaci",
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/square-victoria-oaci",
     "lines": ["orange"],
     "exits": [
       {
@@ -656,7 +657,7 @@
   {
     "id": "cartier",
     "name": "Cartier",
-    "stmId": "cartier-(zone-b)",
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/cartier-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
     "parking": true,
@@ -671,7 +672,7 @@
   {
     "id": "de-la-concorde",
     "name": "De La Concorde",
-    "stmId": "de-la-concorde-(zone-b)",
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/de-la-concorde-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
     "parking": true
@@ -679,7 +680,7 @@
   {
     "id": "montmorency",
     "name": "Montmorency",
-    "stmId": "montmorency-(zone-b)",
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/montmorency-(zone-b)",
     "lines": ["orange"],
     "accessible": true,
     "parking": true
@@ -1004,14 +1005,14 @@
   {
     "id": "longueuil",
     "name": "Longueuil–Université-de-Sherbrooke",
-    "stmId": "longueuil-universite-de-sherbrooke-(zone-b)",
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/longueuil-universite-de-sherbrooke-(zone-b)",
     "lines": ["yellow"],
     "parking": true
   },
   {
     "id": "jean-drapeau",
     "name": "Jean-Drapeau",
-    "stmId": "jean-drapeau-(zone-a)",
+    "stmUrl": "https://www.stm.info/en/info/networks/metro/jean-drapeau-(zone-a)",
     "lines": ["yellow"]
   },
   {
@@ -1154,7 +1155,8 @@
   {
     "id": "gare-centrale",
     "name": "Gare Centrale",
-    "lines": ["a1-a4"],
+    "remUrl": "https://rem.info/en/travelling/stations/gare-centrale",
+    "lines": ["a1-a4", "orange"],
     "accessible": true,
     "parking": true
   },
