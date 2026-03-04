@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { MetroPathFinder, type MetroPathStep } from "../pathFinding";
 import type { Line, StationWithLines } from "../content.config";
-import { normalizeString } from "../utils";
+import { deduplicate, normalizeString } from "../utils";
 import LinePill from "./LinePill";
 import { useFavorites } from "../hooks/useFavorites";
 
@@ -46,8 +46,7 @@ export default function PathFinding({
       // If both stations are valid, find the path
       if (startStationExists && endStationExists) {
         const result = pathFinder.findShortestPath(startParam, endParam);
-        console.log("Result:", result);
-        setPath(result);
+        setPath(result && deduplicate(result));
         if (result) {
           const pathSteps = pathFinder.pathToSteps(result);
           setSteps(pathSteps);
@@ -95,7 +94,7 @@ export default function PathFinding({
     }
 
     const result = pathFinder.findShortestPath(start, end);
-    setPath(result);
+    setPath(result && deduplicate(result));
     if (result) {
       const pathSteps = pathFinder.pathToSteps(result);
       setSteps(pathSteps);
