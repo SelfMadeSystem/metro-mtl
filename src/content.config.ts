@@ -37,8 +37,8 @@ export type Transfer = z.infer<typeof transferSchema>;
 const pathfindingTransferSchema = z.object({
   fromLine: reference("lines"),
   toLine: reference("lines"),
-  fromDirection: reference("stations"),
-  toDirection: reference("stations"),
+  fromDirection: reference("stations").optional(),
+  toDirection: reference("stations").optional(),
   // one of boarding or singleBoarding should be provided
   boarding: z.object({
     // boarding info for the *next* transfer/exit
@@ -50,6 +50,23 @@ const pathfindingTransferSchema = z.object({
   oppositeDoors: z.boolean().optional(), // If true, the doors will be on the opposite side of the train
 });
 export type PathfindingTransfer = z.infer<typeof pathfindingTransferSchema>;
+
+// Pathfinding Station Transfer information schema
+const pathfindingStationTransferSchema = z.object({
+  fromLine: reference("lines"),
+  fromDirection: reference("stations").optional(), // Station ID for direction on source line
+  toStation: reference("stations"),
+  // one of boarding or singleBoarding should be provided
+  boarding: z.object({
+    // boarding info for the *next* transfer/exit
+    front: boardingInfo,
+    middle: boardingInfo,
+    back: boardingInfo,
+  }).optional(),
+  singleBoarding: boardingInfo.optional(), // If the same boarding applies no matter the next transfer/exit
+  oppositeDoors: z.boolean().optional(), // If true, the doors will be on the opposite side of the train
+});
+export type PathfindingStationTransfer = z.infer<typeof pathfindingStationTransferSchema>;
 
 // Define a schema for station metadata
 const stationSchema = z.object({
@@ -63,9 +80,11 @@ const stationSchema = z.object({
   // might add exoUrl in the future if we want to include commuter trains
   accessible: z.boolean().optional(),
   parking: z.boolean().optional(),
+  connections: z.array(reference("stations")).optional(), // List of directly connected station IDs (for pathfinding)
   pathfinding: z
     .object({
       transfers: z.array(pathfindingTransferSchema).optional(),
+      stationTransfers: z.array(pathfindingStationTransferSchema).optional(),
     })
     .optional(),
 });

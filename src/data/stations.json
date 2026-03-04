@@ -281,7 +281,28 @@
     "stmUrl": "https://www.stm.info/en/info/networks/metro/bonaventure",
     "lines": ["orange", "a1-a4"],
     "accessible": true,
-    "parking": true
+    "parking": true,
+    "connections": ["gare-centrale"],
+    "pathfinding": {
+      "stationTransfers": [
+        {
+          "fromLine": "orange",
+          "fromDirection": "montmorency",
+          "toStation": "gare-centrale",
+          "singleBoarding": {
+            "position": "back"
+          }
+        },
+        {
+          "fromLine": "orange",
+          "fromDirection": "cote-vertu",
+          "toStation": "gare-centrale",
+          "singleBoarding": {
+            "position": "front"
+          }
+        }
+      ]
+    }
   },
   {
     "id": "square-victoria",
@@ -1129,7 +1150,21 @@
     "name": "Brossard",
     "lines": ["a1-a4"],
     "accessible": true,
-    "parking": true
+    "parking": true,
+    "exits": [
+      {
+        "id": "main",
+        "name": "Main Exit",
+        "optimalBoarding": "brossard",
+        "boarding": {
+          "brossard": {
+            "position": "front",
+            "car": 1,
+            "door": 1
+          }
+        }
+      }
+    ]
   },
   {
     "id": "du-quartier",
@@ -1158,7 +1193,27 @@
     "remUrl": "https://rem.info/en/travelling/stations/gare-centrale",
     "lines": ["a1-a4", "orange"],
     "accessible": true,
-    "parking": true
+    "parking": true,
+    "connections": ["bonaventure"],
+    "pathfinding": {
+      "stationTransfers": [
+        {
+          "fromLine": "a1-a4",
+          "fromDirection": "brossard",
+          "toStation": "bonaventure",
+          "singleBoarding": {
+            "position": "front"
+          }
+        },
+        {
+          "fromLine": "a1-a4",
+          "toStation": "bonaventure",
+          "singleBoarding": {
+            "position": "back"
+          }
+        }
+      ]
+    }
   },
   {
     "id": "canora",

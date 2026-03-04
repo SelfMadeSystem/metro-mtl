@@ -50,6 +50,7 @@ export default function PathFinding({
         setPath(result);
         if (result) {
           const pathSteps = pathFinder.pathToSteps(result);
+          console.log("Path Steps:", pathSteps);
           setSteps(pathFinder.addBoardingInfo(pathSteps));
         } else {
           setSteps(null);
@@ -71,19 +72,19 @@ export default function PathFinding({
   const filteredStartStations = useMemo(() => {
     if (!startSearch) return stationOptions;
     return stationOptions.filter((station) =>
-      station.searchText.includes(normalizeString(startSearch))
+      station.searchText.includes(normalizeString(startSearch)),
     );
   }, [stationOptions, startSearch]);
 
   const filteredEndStations = useMemo(() => {
     if (!endSearch) return stationOptions;
     return stationOptions.filter((station) =>
-      station.searchText.includes(normalizeString(endSearch))
+      station.searchText.includes(normalizeString(endSearch)),
     );
   }, [stationOptions, endSearch]);
 
   const selectedStartStation = stationOptions.find(
-    (s) => s.id === startStation
+    (s) => s.id === startStation,
   );
   const selectedEndStation = stationOptions.find((s) => s.id === endStation);
 
@@ -283,10 +284,10 @@ function StationSelector({
   // Put favorite stations at the top
   const sortedStations = useMemo(() => {
     const favorites = filteredStations.filter((s) =>
-      favoriteStationIds.includes(s.id)
+      favoriteStationIds.includes(s.id),
     );
     const nonFavorites = filteredStations.filter(
-      (s) => !favoriteStationIds.includes(s.id)
+      (s) => !favoriteStationIds.includes(s.id),
     );
     return [...favorites, ...nonFavorites];
   }, [filteredStations, favoriteStationIds]);
@@ -454,15 +455,7 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         >
           {step.station.name}
         </a>{" "}
-        {<LinePill line={step.line} />} towards{" "}
-        <a
-          href={`/station/${step.towards.id}`}
-          className="font-bold underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {step.towards.name}
-        </a>
+        {<LinePill line={step.line} towards={step.towards.name} />}
         . {boardingInfo}
         {boardingDoors}
       </li>
@@ -470,15 +463,7 @@ function StepComponent({ step }: { step: MetroPathStep }) {
   } else if (step.type === "transfer") {
     return (
       <li>
-        Transfer to <LinePill line={step.toLine} /> towards{" "}
-        <a
-          href={`/station/${step.toDirection.id}`}
-          className="font-bold underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {step.toDirection.name}
-        </a>{" "}
+        Transfer to <LinePill line={step.toLine} towards={step.toDirection.name} />{" "}
         at{" "}
         <a
           href={`/station/${step.station.id}`}
@@ -490,6 +475,31 @@ function StepComponent({ step }: { step: MetroPathStep }) {
         </a>
         . {boardingInfo}
         {boardingDoors}
+      </li>
+    );
+  } else if (step.type === "interStationTransfer") {
+    return (
+      <li>
+        Transfer to station{" "}
+        <a
+          href={`/station/${step.toStation.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.toStation.name}
+        </a>{" "}
+        at{" "}
+        <a
+          href={`/station/${step.fromStation.id}`}
+          className="font-bold underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {step.fromStation.name}
+        </a>
+        . {exitingInfo}
+        {exitingDoors}
       </li>
     );
   } else if (step.type === "exit") {

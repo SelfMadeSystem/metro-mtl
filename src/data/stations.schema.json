@@ -58,6 +58,13 @@
           "type": "boolean",
           "description": "Whether the station has parking available"
         },
+        "connections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of directly connected stations."
+        },
         "pathfinding": {
           "type": "object",
           "properties": {
@@ -65,6 +72,12 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/pathfindingTransfer"
+              }
+            },
+            "stationTransfers": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/pathfindingStationTransfer"
               }
             }
           },
@@ -149,7 +162,7 @@
     },
     "pathfindingTransfer": {
       "type": "object",
-      "required": ["fromLine", "toLine", "fromDirection", "toDirection"],
+      "required": ["fromLine", "toLine"],
       "properties": {
         "fromLine": {
           "type": "string",
@@ -166,6 +179,49 @@
         "toDirection": {
           "type": "string",
           "description": "Station ID for direction on destination line"
+        },
+        "boarding": {
+          "type": "object",
+          "properties": {
+            "front": {
+              "$ref": "#/definitions/boardingInfo"
+            },
+            "middle": {
+              "$ref": "#/definitions/boardingInfo"
+            },
+            "back": {
+              "$ref": "#/definitions/boardingInfo"
+            }
+          },
+          "required": ["front", "middle", "back"],
+          "description": "Boarding info for the next transfer/exit"
+        },
+        "singleBoarding": {
+          "$ref": "#/definitions/boardingInfo",
+          "description": "If the same boarding applies no matter the next transfer/exit"
+        },
+        "oppositeDoors": {
+          "type": "boolean",
+          "description": "If true, the doors will be on the opposite side of the train"
+        }
+      },
+      "additionalProperties": false
+    },
+    "pathfindingStationTransfer": {
+      "type": "object",
+      "required": ["fromLine", "toStation"],
+      "properties": {
+        "fromLine": {
+          "type": "string",
+          "description": "Source line ID"
+        },
+        "fromDirection": {
+          "type": "string",
+          "description": "Station ID for direction on source line"
+        },
+        "toStation": {
+          "type": "string",
+          "description": "Station ID for destination station"
         },
         "boarding": {
           "type": "object",

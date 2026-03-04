@@ -1,6 +1,7 @@
 import Graph from "graphology";
 import shortestPath from "graphology-shortest-path";
 import type { Line, StationWithLines } from "./content.config";
+import { deduplicate } from "./utils";
 
 const S = "\0"; // splitter
 
@@ -37,14 +38,26 @@ export type MetroPathExitStep = {
   exiting: BoardingInfo;
 };
 
+export type MetroPathInterStationTransferStep = {
+  type: "interStationTransfer";
+  fromStation: StationWithLines;
+  fromLine: Line;
+  fromDirection: StationWithLines;
+  toStation: StationWithLines;
+  boarding: BoardingInfo;
+  exiting: BoardingInfo;
+};
+
 export type MetroPathStep =
   | MetroPathStartStep
   | MetroPathTransferStep
-  | MetroPathExitStep;
+  | MetroPathExitStep
+  | MetroPathInterStationTransferStep;
 
 export type PartialMetroPathStep =
   | Omit<MetroPathStartStep, "boarding">
   | Omit<MetroPathTransferStep, "boarding" | "exiting">
+  | Omit<MetroPathInterStationTransferStep, "boarding" | "exiting">
   | Omit<MetroPathExitStep, "exiting">;
 
 export class MetroPathFinder {
@@ -56,7 +69,10 @@ export class MetroPathFinder {
   >;
   private stationsById: Record<string, StationWithLines> = {};
 
-  constructor(private lines: Line[], private stations: StationWithLines[]) {
+  constructor(
+    private lines: Line[],
+    private stations: StationWithLines[],
+  ) {
     for (const station of stations) {
       this.stationsById[station.id] = station;
     }
@@ -101,7 +117,6 @@ export class MetroPathFinder {
 
         if (!this.graph.hasNode(id)) {
           this.graph.addNode(id, station);
-          console.warn("Adding missing node", id);
         }
 
         if (!this.graph.hasNode(sid)) {
@@ -116,6 +131,37 @@ export class MetroPathFinder {
           this.graph.addEdge(sid, id);
         }
       }
+
+      if (station.connections) {
+        for (const { id: connectionId } of station.connections) {
+          const connection = this.stationsById[connectionId];
+          if (!connection) {
+            console.warn(
+              `Station ${station.id} has a connection to non-existent station ${connectionId}`,
+            );
+            continue;
+          }
+
+          const sid = station.id;
+          const cid = connection.id;
+
+          if (!this.graph.hasNode(sid)) {
+            this.graph.addNode(sid, station);
+            console.warn("Adding missing node", sid);
+          }
+          if (!this.graph.hasNode(cid)) {
+            this.graph.addNode(cid, connection);
+          }
+
+          if (!this.graph.hasEdge(sid, cid)) {
+            this.graph.addEdge(sid, cid);//, { weight: 50 }); // High weight to discourage transfers unless necessary
+          }
+          if (!this.graph.hasEdge(cid, sid)) {
+            this.graph.addEdge(cid, sid);//, { weight: 50 }); // High weight to discourage transfers unless necessary
+          }
+        }
+      }
+
       if (station.lines.length < 2) continue;
 
       for (let i = 0; i < station.lines.length; i++) {
@@ -153,7 +199,7 @@ export class MetroPathFinder {
 
   public findShortestPath(
     startId: string,
-    endId: string
+    endId: string,
   ): StationWithLines[] | null {
     if (!this.graph.hasNode(startId) || !this.graph.hasNode(endId)) {
       return null;
@@ -163,7 +209,7 @@ export class MetroPathFinder {
       this.graph,
       startId,
       endId,
-      "weight"
+      "weight",
     );
     if (!path) {
       return null;
@@ -187,17 +233,17 @@ export class MetroPathFinder {
 
   public getTowardsStation(
     current: StationWithLines,
-    next: StationWithLines
+    next: StationWithLines,
   ): StationWithLines | null {
     // Find a line that connects current to next
     const commonLine = current.lines.find((line) =>
-      next.lines.some((l) => l.id === line.id)
+      next.lines.some((l) => l.id === line.id),
     );
     if (!commonLine) return null;
 
     // Determine direction on that line
     const currentIndex = commonLine.stations.findIndex(
-      (s) => s.id === current.id
+      (s) => s.id === current.id,
     );
     const nextIndex = commonLine.stations.findIndex((s) => s.id === next.id);
 
@@ -214,6 +260,7 @@ export class MetroPathFinder {
 
   public pathToSteps(path: StationWithLines[]): PartialMetroPathStep[] {
     if (path.length === 0) return [];
+    path = deduplicate(path);
 
     const steps: PartialMetroPathStep[] = [];
     let currentLine: Line | null = null;
@@ -226,13 +273,15 @@ export class MetroPathFinder {
       if (i === 0 && nextStation) {
         // Determine starting line
         currentLine = station.lines.find((line) =>
-          line.stations.some((s) => s.id === nextStation.id)
+          line.stations.some((s) => s.id === nextStation.id),
         ) as Line;
 
         const towards = this.getTowardsStation(station, nextStation);
 
         if (!currentLine || !towards) {
-          throw new Error("Invalid path: cannot determine starting line");
+          throw new Error(
+            `Invalid path: cannot determine starting line for: ${station.id} to ${nextStation.id}`,
+          );
         }
 
         prevTowards = towards;
@@ -246,22 +295,38 @@ export class MetroPathFinder {
       } else if (nextStation) {
         // Check if we need to transfer
         const onSameLine = currentLine?.stations.some(
-          (s) => s.id === nextStation.id
+          (s) => s.id === nextStation.id,
         );
 
         if (onSameLine) {
           continue;
         }
 
-        // Transfer needed
+        // Check if this is an inter-station transfer
+        const isInterStationTransfer = station.connections?.some((c) => c.id === nextStation.id);
+
+        if (isInterStationTransfer) {
+          steps.push({
+            type: "interStationTransfer",
+            fromStation: station,
+            fromLine: currentLine!,
+            fromDirection: prevTowards!,
+            toStation: nextStation,
+          });
+          continue;
+        }
+
+        // Regular transfer
         const newLine = station.lines.find((line) =>
-          line.stations.some((s) => s.id === nextStation.id)
+          line.stations.some((s) => s.id === nextStation.id),
         ) as Line;
 
         const towards = this.getTowardsStation(station, nextStation);
 
         if (!towards) {
-          throw new Error("Invalid path: cannot determine transfer direction");
+          throw new Error(
+            `Invalid path: cannot determine transfer direction for: ${station.id} to ${nextStation.id}`,
+          );
         }
 
         const prevPrevTowards = prevTowards;
@@ -293,7 +358,7 @@ export class MetroPathFinder {
   }
 
   public addBoardingInfo(
-    steps: Exclude<PartialMetroPathStep & Partial<MetroPathStep>, never>[]
+    steps: Exclude<PartialMetroPathStep & Partial<MetroPathStep>, never>[],
   ): MetroPathStep[] {
     for (let i = steps.length - 1; i >= 0; i--) {
       const step = steps[i];
@@ -399,8 +464,8 @@ export class MetroPathFinder {
             return (
               t.fromLine.id === step.fromLine.id &&
               t.toLine.id === step.toLine.id &&
-              t.fromDirection.id === step.fromDirection.id &&
-              t.toDirection.id === step.toDirection.id
+              (!t.fromDirection || t.fromDirection.id === step.fromDirection.id) &&
+              (!t.toDirection || t.toDirection.id === step.toDirection.id)
             );
           });
 
@@ -441,6 +506,78 @@ export class MetroPathFinder {
           };
           break;
         }
+        case "interStationTransfer": {
+          if (i === 0 || i === steps.length - 1) {
+            throw new Error(
+              "Inter-station transfer cannot be the first or last step",
+            );
+          }
+          const next = steps[i + 1];
+          if (next.type === "start") {
+            throw new Error(
+              "Invalid path: start cannot follow inter-station transfer",
+            );
+          }
+          if (!next.exiting) {
+            throw new Error("Next step must have had exiting info added first");
+          }
+          // Set this step's boarding to the next step's exiting
+          step.boarding = next.exiting;
+
+          if (
+            !step.fromStation.pathfinding ||
+            !step.fromStation.pathfinding.stationTransfers
+          ) {
+            step.exiting = { position: "none" };
+            break;
+          }
+
+          const transfer = step.fromStation.pathfinding.stationTransfers.find((t) => {
+            return (
+              t.fromLine.id === step.fromLine.id &&
+              (!t.fromDirection || t.fromDirection.id === step.fromDirection.id) &&
+              t.toStation.id === step.toStation.id
+            );
+          });
+
+          if (!transfer) {
+            step.exiting = { position: "none" };
+            break;
+          }
+
+          const { oppositeDoors } = transfer;
+
+          if (!transfer.boarding && !transfer.singleBoarding) {
+            step.exiting = { position: "none", oppositeDoors };
+            break;
+          }
+
+          if (!transfer.boarding && transfer.singleBoarding) {
+            step.exiting = { ...transfer.singleBoarding, oppositeDoors };
+            break;
+          }
+
+          if (!transfer.boarding) {
+            throw new Error("Transfer should have boarding info at this point");
+          }
+
+          // No boarding info for this direction. Probably because it's "none"
+          if (!(next.exiting.position in transfer.boarding)) {
+            step.exiting = { position: "none", oppositeDoors };
+            break;
+          }
+
+          step.exiting = {
+            ...(transfer.boarding[
+              next.exiting.position as keyof typeof transfer.boarding
+            ] || {
+              position: "none",
+            }),
+            oppositeDoors,
+          };
+
+          break;
+        }
         case "start": {
           if (i !== 0) {
             throw new Error("Start must be the first step");
@@ -448,7 +585,7 @@ export class MetroPathFinder {
           const next = steps[i + 1];
           if (!next || next.type === "start") {
             throw new Error(
-              "Invalid path: start must be followed by transfer/exit"
+              "Invalid path: start must be followed by transfer/exit",
             );
           }
           if (!next.exiting) {
