@@ -279,7 +279,7 @@
     "id": "bonaventure",
     "name": "Bonaventure",
     "stmUrl": "https://www.stm.info/en/info/networks/metro/bonaventure",
-    "lines": ["orange", "a1-a4"],
+    "lines": ["orange", "a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true,
     "connections": ["gare-centrale"],
@@ -838,7 +838,7 @@
   {
     "id": "mcgill",
     "name": "McGill",
-    "lines": ["green", "a1-a4"],
+    "lines": ["green", "a1-a4", "a1-a3", "a1-a2"],
     "exits": [
       {
         "id": "main",
@@ -1087,7 +1087,7 @@
   {
     "id": "edouard-montpetit",
     "name": "Édouard-Montpetit",
-    "lines": ["blue", "a1-a4"],
+    "lines": ["blue", "a1-a4", "a1-a3", "a1-a2"],
     "exits": [
       {
         "id": "main",
@@ -1148,7 +1148,7 @@
   {
     "id": "brossard",
     "name": "Brossard",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true,
     "exits": [
@@ -1169,21 +1169,21 @@
   {
     "id": "du-quartier",
     "name": "Du Quartier",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "panama",
     "name": "Panama",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "ile-des-soeurs",
     "name": "Île-des-Sœurs",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
@@ -1191,7 +1191,7 @@
     "id": "gare-centrale",
     "name": "Gare Centrale",
     "remUrl": "https://rem.info/en/travelling/stations/gare-centrale",
-    "lines": ["a1-a4", "orange"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2", "orange"],
     "accessible": true,
     "parking": true,
     "connections": ["bonaventure"],
@@ -1218,42 +1218,42 @@
   {
     "id": "canora",
     "name": "Canora",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "ville-de-mont-royal",
     "name": "Ville-de-Mont-Royal",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "cote-de-liesse",
     "name": "Côte-de-Liesse",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "montpellier",
     "name": "Montpellier",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "du-ruisseau",
     "name": "Du Ruisseau",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
   {
     "id": "bois-franc",
     "name": "Bois-Franc",
-    "lines": ["a1-a4"],
+    "lines": ["a1-a4", "a1-a3", "a1-a2"],
     "accessible": true,
     "parking": true
   },
@@ -1296,6 +1296,48 @@
     "id": "deux-montagnes",
     "name": "Deux-Montagnes",
     "lines": ["a1-a4"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "des-sources",
+    "name": "Des Sources",
+    "lines": ["a1-a3"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "fairview-pointe-claire",
+    "name": "Fairview–Pointe-Claire",
+    "lines": ["a1-a3"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "kirkland",
+    "name": "Kirkland",
+    "lines": ["a1-a3"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "anse-a-l-orme",
+    "name": "Anse-à-l'Orme",
+    "lines": ["a1-a3"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "marie-curie",
+    "name": "Marie-Curie",
+    "lines": ["a1-a2"],
+    "accessible": true,
+    "parking": true
+  },
+  {
+    "id": "yul-aeroport-montreal-trudeau",
+    "name": "YUL–Aéroport Montréal-Trudeau",
+    "lines": ["a1-a2"],
     "accessible": true,
     "parking": true
   }

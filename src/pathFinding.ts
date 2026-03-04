@@ -258,7 +258,7 @@ export class MetroPathFinder {
     }
   }
 
-  public pathToSteps(path: StationWithLines[]): PartialMetroPathStep[] {
+  public pathToSteps(path: StationWithLines[]): MetroPathStep[] {
     if (path.length === 0) return [];
     path = deduplicate(path);
 
@@ -354,7 +354,7 @@ export class MetroPathFinder {
       }
     }
 
-    return steps;
+    return this.cleanupSteps(this.addBoardingInfo(steps));
   }
 
   public addBoardingInfo(
@@ -598,5 +598,27 @@ export class MetroPathFinder {
     }
 
     return steps as MetroPathStep[];
+  }
+
+  public cleanupSteps(steps: MetroPathStep[]): MetroPathStep[] {
+    const cleanedSteps: MetroPathStep[] = [];
+    
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      const prevStep = cleanedSteps.at(-1) || null;
+
+      if (step.type !== "transfer" || !prevStep || prevStep.type !== "transfer") {
+        cleanedSteps.push(step);
+        continue;
+      }
+
+      if (step.station.lines.some(line => line.id === prevStep.toLine.id)) {
+        prevStep.toLine = step.toLine;
+        prevStep.toDirection = step.toDirection;
+        prevStep.exiting = step.exiting;
+      }
+    }
+
+    return cleanedSteps;
   }
 }

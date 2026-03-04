@@ -50,8 +50,7 @@ export default function PathFinding({
         setPath(result);
         if (result) {
           const pathSteps = pathFinder.pathToSteps(result);
-          console.log("Path Steps:", pathSteps);
-          setSteps(pathFinder.addBoardingInfo(pathSteps));
+          setSteps(pathSteps);
         } else {
           setSteps(null);
         }
@@ -96,11 +95,10 @@ export default function PathFinding({
     }
 
     const result = pathFinder.findShortestPath(start, end);
-    console.log("Result:", result);
     setPath(result);
     if (result) {
       const pathSteps = pathFinder.pathToSteps(result);
-      setSteps(pathFinder.addBoardingInfo(pathSteps));
+      setSteps(pathSteps);
     } else {
       setSteps(null);
     }
