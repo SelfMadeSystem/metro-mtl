@@ -601,21 +601,28 @@ export class MetroPathFinder {
   }
 
   public cleanupSteps(steps: MetroPathStep[]): MetroPathStep[] {
+    console.log("Cleaning up steps:", steps);
     const cleanedSteps: MetroPathStep[] = [];
     
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
       const prevStep = cleanedSteps.at(-1) || null;
 
-      if (step.type !== "transfer" || !prevStep || prevStep.type !== "transfer") {
+      if (step.type !== "transfer" || !prevStep) {
         cleanedSteps.push(step);
         continue;
       }
 
-      if (step.station.lines.some(line => line.id === prevStep.toLine.id)) {
+      if (prevStep.type === "start" && prevStep.station.lines.some(line => line.id === step.toLine.id)) {
+        prevStep.line = step.toLine;
+        prevStep.towards = step.toDirection;
+        prevStep.boarding = step.boarding;
+      } else if (prevStep.type === "transfer" && prevStep.station.lines.some(line => line.id === step.toLine.id)) {
         prevStep.toLine = step.toLine;
         prevStep.toDirection = step.toDirection;
-        prevStep.exiting = step.exiting;
+        prevStep.boarding = step.boarding;
+      } else {
+        cleanedSteps.push(step);
       }
     }
 
